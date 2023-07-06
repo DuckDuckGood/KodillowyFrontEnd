@@ -24,7 +24,6 @@ function getItem(item) {
 }
 
 function getResult(playerItem, jsItem) {
-    console.log(`${playerItem} ${jsItem}`);
     if (playerItem === jsItem) {
         return 'Remis!';
     }
