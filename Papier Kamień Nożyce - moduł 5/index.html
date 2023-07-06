@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="pl">
+    <head>
+        <title>Kamień Papier Nożyce</title>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link rel="stylesheet" href="css/style.css">
+        <link rel="stylesheet" href="https://use.fontawesome.com/releases/v6.0.0/css/all.css">
+    </head>
+    <body>
+        <div class="container welcome py-10">
+            Kamień, Papier i Nożyce!
+        </div>
+        <div class="container choose">
+            Wybierz swoją broń ;)
+        </div>
+        <div class="container items">
+            <div class="item py-10" onclick="fight('stone')">
+                <i class="fa-regular fa-gem"></i>
+                Kamień
+            </div>
+            <div class="item py-10" onclick="fight('paper')">
+                <i class="fa-solid fa-toilet-paper"></i>
+                Papier
+            </div>
+            <div class="item py-10" onclick="fight('scissors')">
+                <i class="fa-solid fa-scissors"></i>
+                Nożyce
+            </div>
+        </div>
+        <div class="container response" id="response"></div>
+        <script src="js/script.js"></script>
+    </body>
+</html>
