@@ -12,6 +12,6 @@
         document.getElementById(id).classList.add('active');
     }
 
-    const selectors = document.querySelectorAll('li > a');
+    const selectors = document.querySelectorAll('.titles > li > a');
     selectors.forEach(selector => selector.addEventListener('click', eventHandler));
 }
