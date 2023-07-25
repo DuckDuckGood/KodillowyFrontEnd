@@ -16,8 +16,7 @@
         document.getElementById(id).classList.add('active');
     }
 
-    generateTitles();
-    const selectors = document.querySelectorAll('li > a');
+    const selectors = document.querySelectorAll('.titles > li > a');
     selectors.forEach(selector => selector.addEventListener('click', eventHandler));
 
     function generateTitles() {
