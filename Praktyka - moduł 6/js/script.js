@@ -1,31 +1,80 @@
 'use strict';
 {
-  const post = '.post';
-  const postTitle = '.post-title';
-  const titles = '.titles';
+  const postClass = '.post';
+  const postTitleClass = '.post-title';
+  const titlesClass = '.titles';
+  const activeClass = 'active';
+
+  const dataTagsAttrubite = 'data-tags';
+  const idAttribute = 'id';
+
+  const tagsSelector = '.post-tags > .list-horizontal';
+
+  const beforeend = 'beforeend';
+
+  const href = 'href';
 
   const eventHandler = function(event) {
     event.preventDefault();
     const clicked = this;
-    const activeElements = document.getElementsByClassName('active');
-    Object.entries(activeElements).forEach(el => el[1].classList.remove('active'));
+    const activeElements = document.getElementsByClassName(activeClass);
+    Object.entries(activeElements).forEach(el => el[1].classList.remove(activeClass));
 
-    const id = clicked.getAttribute('href').replace('#', '');
+    const id = clicked.getAttribute(href).replace('#', '');
 
-    clicked.classList.add('active');
-    document.getElementById(id).classList.add('active');
+    clicked.classList.add(activeClass);
+    document.getElementById(id).classList.add(activeClass);
   };
 
-  document.querySelector(titles).innerHTML = '';
+  const tagClickHandler = function(event) {
+    event.preventDefault();
+    const clicked = this;
+    const tag = clicked.getAttribute(href).replace('#', '');
+    const tags = Object.values(document.getElementsByClassName(activeClass)).filter(el => el.classList.contains('tag'));
+    tags.forEach(el => el.classList.remove(activeClass));
+    console.log(tags);
+  };
 
-  const articles = document.querySelectorAll(post);
-  Object.values(articles).forEach(article => {
-    const articleId = article.getAttribute('id');
-    const articleTitle = article.querySelector(postTitle).innerHTML;
-    const link = `<li><a href="#${articleId}"><span>${articleTitle}</span></a></li>`;
-    document.querySelector(titles).insertAdjacentHTML('beforeend', link);
-  });
-
-  const selectors = document.querySelectorAll('.titles > li > a');
+  generateTitles();
+  const selectors = document.querySelectorAll('li > a');
   selectors.forEach(selector => selector.addEventListener('click', eventHandler));
+  generateTags();
+
+  const tags = document.querySelectorAll('.tag');
+  tags.forEach(tag => tag.addEventListener('click', tagClickHandler));
+
+  // eslint-disable-next-line no-inner-declarations
+  function generateTitles() {
+    removeOldTitles();
+    const articles = getArticles();
+    Object.values(articles).forEach(article => {
+      const articleId = article.getAttribute(idAttribute);
+      const articleTitle = article.querySelector(postTitleClass).innerHTML;
+      
+      const link = `<li><a href="#${articleId}"><span>${articleTitle}</span></a></li>`;
+      document.querySelector(titlesClass).insertAdjacentHTML(beforeend, link);
+    });
+  }
+
+  // eslint-disable-next-line no-inner-declarations
+  function removeOldTitles() {
+    document.querySelector(titlesClass).innerHTML = '';
+  }
+
+  // eslint-disable-next-line no-inner-declarations
+  function generateTags() {
+    const articles = getArticles();
+    Object.values(articles).forEach(article => {
+      const tags = article.getAttribute(dataTagsAttrubite).split(' ');
+      Object.values(tags).forEach(tag => {
+        const link = `<li><a href="#tag-${tag}" class="tag active">${tag}</a></li>&nbsp;`;
+        article.querySelector(tagsSelector).insertAdjacentHTML(beforeend, link);
+      });
+    });
+  }
+
+  // eslint-disable-next-line no-inner-declarations
+  function getArticles() {
+    return document.querySelectorAll(postClass);
+  }
 }
