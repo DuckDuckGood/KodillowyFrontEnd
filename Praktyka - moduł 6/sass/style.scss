@@ -4,6 +4,9 @@
 
 $color-light: #fff;
 $color-dark: #444;
+$color-amethyst: #9b59b6;
+$color-peter-river: #3498db;
+$color-emerald: #2ecc71;
 
 $font-logo: 'Sacramento', cursive;
 $font-header: 'Oswald', sans-serif;
@@ -117,4 +120,16 @@ body {
   p {
     margin: 0 10px 0 0;
   }
+}
+
+.tag-size-1 {
+  color: $color-amethyst;
+}
+
+.tag-size-2 {
+  color: $color-peter-river;
+}
+
+.tag-size-3 {
+  color: $color-emerald;
 }
