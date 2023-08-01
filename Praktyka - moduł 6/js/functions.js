@@ -15,6 +15,26 @@ const tagSizeOne = 'tag-size-1';
 const tagSizeTwo = 'tag-size-2';
 const tagSizeThree = 'tag-size-3';
 
+const templates = {
+  articleLink: Handlebars.compile(document.querySelector('#template-article-link').innerHTML)
+}
+
+const handlebarTag = {
+  articleLink: Handlebars.compile(document.querySelector('#template-tag-link').innerHTML)
+}
+
+const handlebarAuthor = {
+  articleLink: Handlebars.compile(document.querySelector('#template-author-link').innerHTML)
+}
+
+const handlebarTagList = {
+  articleLink: Handlebars.compile(document.querySelector('#template-tag-list-link').innerHTML)
+}
+
+const handlebarAuthorList = {
+  articleLink: Handlebars.compile(document.querySelector('#template-author-list-link').innerHTML)
+}
+
 function calculateTagsParams(allTags = {}) {
   const result = {};
   Object.values(allTags).forEach(count => {
@@ -47,7 +67,8 @@ export function generateTags() {
   Object.values(articles).forEach(article => {
     const tags = article.getAttribute(dataTagsAttrubite).split(' ');
     Object.values(tags).forEach(tag => {
-      const link = `<li><a href="#tag-${tag}">${tag}</a></li>&nbsp;`;
+      const linkData = {tag: tag};
+      const link = handlebarTag.articleLink(linkData);
       article.querySelector(tagsSelector).insertAdjacentHTML(beforeend, link);
       if (!allTags[tag]) {
         allTags[tag] = 1;
@@ -56,20 +77,31 @@ export function generateTags() {
       }
     });
   });
+  const allTagsData = {tags: []};
   Object.entries(allTags).forEach(entry => {
-    const [tag, count] = entry;
+    const [tagName, count] = entry;
     const calculatedTags = calculateTagsParams(allTags);
-    const link = `<li><a class="${calculateTagClass(count, calculatedTags)}" href="#tag-${tag}">${tag} (${count})</a></li>&nbsp;`;
-    document.querySelector(tagsListSelector).insertAdjacentHTML(beforeend, link);
+    allTagsData.tags.push({
+      tag: tagName,
+      class: calculateTagClass(count, calculatedTags),
+      count: count,
+    });
   });
+  const generatedTags = handlebarTagList.articleLink(allTagsData);
+  document.querySelector(tagsListSelector).insertAdjacentHTML(beforeend, generatedTags);
 }
 
 function generateAuthorsList(allAuthors) {
+  const allAuthorsData = {authors: []};
   Object.entries(allAuthors).forEach(entry => {
     const [author, count] = entry;
-    const link = `<a href="#author-${author}">${author} (${count})</a><br>`;
-    document.querySelector(authorsListSelector).insertAdjacentHTML(beforeend, link);
+    allAuthorsData.authors.push({
+      author: author,
+      count: count,
+    });
   });
+  const generatedAuthors = handlebarAuthorList.articleLink(allAuthorsData);
+  document.querySelector(authorsListSelector).insertAdjacentHTML(beforeend, generatedAuthors);
 }
 
 export function generateAuthors() {
@@ -77,7 +109,8 @@ export function generateAuthors() {
   const articles = getArticles();
   Object.values(articles).forEach(article => {
     const author = article.getAttribute(dataAuthorAttribute);
-    const link = `<a href="#author-${author}">by ${author}</a>`;
+    const linkData = {author: author};
+    const link = handlebarAuthor.articleLink(linkData);
     article.querySelector(authorSelector).insertAdjacentHTML(beforeend, link);
 
     if (!allAuthors[author]) {
@@ -100,7 +133,8 @@ export function generateTitles(customSelector = '') {
     const articleId = article.getAttribute(idAttribute);
     const articleTitle = article.querySelector(postTitleClass).innerHTML;
     
-    const link = `<li><a href="#${articleId}"><span>${articleTitle}</span></a></li>`;
+    const linkData = {id: articleId, title: articleTitle};
+    const link = templates.articleLink(linkData);
     document.querySelector(titlesClass).insertAdjacentHTML(beforeend, link);
   });
 
@@ -109,7 +143,6 @@ export function generateTitles(customSelector = '') {
 }
 
 export function getArticles(customSelector = '') {
-  console.log(`${postClass}${customSelector}`);
   return document.querySelectorAll(`${postClass}${customSelector}`);
 }
 
