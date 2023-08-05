@@ -40,7 +40,7 @@ const select = {
     },
   };
 
-  const settings = {
+  const settings = { // eslint-disable-line no-unused-vars
     amountWidget: {
       defaultValue: 1,
       defaultMin: 1,
@@ -58,6 +58,9 @@ const select = {
       thisProduct.id = id;
       thisProduct.data = data;
       thisProduct.renderInMenu();
+      thisProduct.getElements();
+      thisProduct.initOrderForm();
+      thisProduct.processOrder();
       thisProduct.initAccordion();
     }
 
@@ -67,6 +70,16 @@ const select = {
       thisProduct.element = utils.createDOMFromHTML(generatedHtml);
       const menuContainer = document.querySelector(select.containerOf.menu);
       menuContainer.appendChild(thisProduct.element);
+    }
+
+    getElements(){
+      const thisProduct = this;
+    
+      thisProduct.accordionTrigger = thisProduct.element.querySelector(select.menuProduct.clickable);
+      thisProduct.form = thisProduct.element.querySelector(select.menuProduct.form);
+      thisProduct.formInputs = thisProduct.form.querySelectorAll(select.all.formInputs);
+      thisProduct.cartButton = thisProduct.element.querySelector(select.menuProduct.cartButton);
+      thisProduct.priceElem = thisProduct.element.querySelector(select.menuProduct.priceElem);
     }
 
     _accordionEventListener(e) {
@@ -83,7 +96,45 @@ const select = {
 
     initAccordion() {
       const thisProduct = this;
-      thisProduct.element.addEventListener('click', thisProduct._accordionEventListener);
+      thisProduct.accordionTrigger.addEventListener('click', thisProduct._accordionEventListener);
+    }
+
+    _orderEventListener(event) {
+      event.preventDefault();
+    }
+
+    initOrderForm() {
+      const thisProduct = this;
+      thisProduct.form.addEventListener('submit', thisProduct._orderEventListener);
+      thisProduct.formInputs.forEach(input => input.addEventListener('change', function() {
+        thisProduct.processOrder();
+      }));
+
+      thisProduct.cartButton.addEventListener('click', thisProduct._orderEventListener);
+    }
+
+    processOrder() {
+      const thisProduct = this;
+      const formData = utils.serializeFormToObject(thisProduct.form);
+      let price = thisProduct.data.price;
+      if (thisProduct.data.params) {
+        Object.values(thisProduct.data.params).forEach(param => {
+
+          Object.entries(param.options).forEach(optionEntry => {
+            const [optionId, option] = optionEntry;
+            
+            if (formData.ingredients) {
+              if (option.default && !Object.values(formData.ingredients).some(ingredient => ingredient === optionId)) {
+                price--;
+              }
+              if (!option.default && Object.values(formData.ingredients).some(ingredient => ingredient === optionId)) {
+                price++;
+              }
+            }
+          });
+        });
+      }
+      thisProduct.priceElem.innerHTML = price;
     }
   }
 
