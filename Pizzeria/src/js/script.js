@@ -80,6 +80,7 @@ const select = {
       thisProduct.formInputs = thisProduct.form.querySelectorAll(select.all.formInputs);
       thisProduct.cartButton = thisProduct.element.querySelector(select.menuProduct.cartButton);
       thisProduct.priceElem = thisProduct.element.querySelector(select.menuProduct.priceElem);
+      thisProduct.imageWrapper = thisProduct.element.querySelector(select.menuProduct.imageWrapper);
     }
 
     _accordionEventListener(e) {
@@ -89,7 +90,7 @@ const select = {
       }
 
       const activeElements = document.getElementsByClassName(classNames.menuProduct.wrapperActive);
-      Object.values(activeElements).filter(el => el !== element).forEach(element => element.classList.remove(classNames.menuProduct.wrapperActive));
+      Object.values(activeElements).filter(el => el.nodeName !== 'IMG' && el !== element).forEach(element => element.classList.remove(classNames.menuProduct.wrapperActive));
       
       element.classList.toggle(classNames.menuProduct.wrapperActive);
     }
@@ -117,18 +118,30 @@ const select = {
       const thisProduct = this;
       const formData = utils.serializeFormToObject(thisProduct.form);
       let price = thisProduct.data.price;
+      //console.log(thisProduct.imageWrapper);
       if (thisProduct.data.params) {
-        Object.values(thisProduct.data.params).forEach(param => {
+        //console.log(thisProduct.data.params);
+        Object.entries(thisProduct.data.params).forEach(paramEntry => {
+          const [paramId, param] = paramEntry;
 
           Object.entries(param.options).forEach(optionEntry => {
             const [optionId, option] = optionEntry;
             
             if (formData.ingredients) {
-              if (option.default && !Object.values(formData.ingredients).some(ingredient => ingredient === optionId)) {
-                price--;
+              const imageClass = `.${paramId}-${optionId}`;
+              const image = document.querySelector(imageClass);
+              if (!Object.values(formData.ingredients).some(ingredient => ingredient === optionId)) {
+                if (option.default) {
+                  price--;
+                }
+                image.classList.remove(classNames.menuProduct.wrapperActive);
               }
-              if (!option.default && Object.values(formData.ingredients).some(ingredient => ingredient === optionId)) {
-                price++;
+              
+              if (Object.values(formData.ingredients).some(ingredient => ingredient === optionId)) {
+                if (!option.default) {
+                  price++;
+                }
+                image.classList.add(classNames.menuProduct.wrapperActive);
               }
             }
           });
