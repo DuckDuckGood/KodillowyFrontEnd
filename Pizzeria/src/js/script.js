@@ -100,7 +100,9 @@ const select = {
     }
 
     _orderEventListener(event) {
+      const thisProduct = this;
       event.preventDefault();
+      thisProduct.processOrder();
     }
 
     initOrderForm() {
@@ -113,28 +115,39 @@ const select = {
       thisProduct.cartButton.addEventListener('click', thisProduct._orderEventListener);
     }
 
+    calculateProductPrice(productParams, optionEntry) {
+      const [optionId, option] = optionEntry;
+      if (productParams) {
+        Object.values(option).filter
+        if (option.default && !Object.values(productParams).some(productParam => productParam === optionId)) {
+          return option.price * -1;
+        }
+        if (!option.default && Object.values(productParams).some(productParam => productParam === optionId)) {
+          return option.price * 1;
+        }
+      }
+      return 0;
+    }
+
     processOrder() {
       const thisProduct = this;
       const formData = utils.serializeFormToObject(thisProduct.form);
+      const amount = formData.amount[0];
       let price = thisProduct.data.price;
       if (thisProduct.data.params) {
-        Object.values(thisProduct.data.params).forEach(param => {
+        Object.entries(thisProduct.data.params).forEach(paramEntry => {
+          const [paramId, param] = paramEntry;
 
           Object.entries(param.options).forEach(optionEntry => {
-            const [optionId, option] = optionEntry;
-            
-            if (formData.ingredients) {
-              if (option.default && !Object.values(formData.ingredients).some(ingredient => ingredient === optionId)) {
-                price--;
-              }
-              if (!option.default && Object.values(formData.ingredients).some(ingredient => ingredient === optionId)) {
-                price++;
-              }
-            }
+            price = paramId === 'sauce' && formData.sauce ? price + thisProduct.calculateProductPrice(formData.sauce, optionEntry) : price;
+            price = paramId === 'toppings' && formData.toppings ? price + thisProduct.calculateProductPrice(formData.toppings, optionEntry) : price;
+            price = paramId === 'crust' && formData.crust ? price + thisProduct.calculateProductPrice(formData.crust, optionEntry) : price;
+            price = paramId === 'ingredients' && formData.ingredients ? price + thisProduct.calculateProductPrice(formData.ingredients, optionEntry) : price;
+            price = paramId === 'coffee' && formData.coffee ? price + thisProduct.calculateProductPrice(formData.coffee, optionEntry) : price;
           });
         });
       }
-      thisProduct.priceElem.innerHTML = price;
+      thisProduct.priceElem.innerHTML = price * amount;
     }
   }
 
