@@ -40,7 +40,7 @@ const select = {
     },
   };
 
-  const settings = {
+  const settings = { // eslint-disable-line no-unused-vars
     amountWidget: {
       defaultValue: 1,
       defaultMin: 1,
@@ -58,6 +58,9 @@ const select = {
       thisProduct.id = id;
       thisProduct.data = data;
       thisProduct.renderInMenu();
+      thisProduct.getElements();
+      thisProduct.initOrderForm();
+      thisProduct.processOrder();
       thisProduct.initAccordion();
     }
 
@@ -67,6 +70,16 @@ const select = {
       thisProduct.element = utils.createDOMFromHTML(generatedHtml);
       const menuContainer = document.querySelector(select.containerOf.menu);
       menuContainer.appendChild(thisProduct.element);
+    }
+
+    getElements(){
+      const thisProduct = this;
+    
+      thisProduct.accordionTrigger = thisProduct.element.querySelector(select.menuProduct.clickable);
+      thisProduct.form = thisProduct.element.querySelector(select.menuProduct.form);
+      thisProduct.formInputs = thisProduct.form.querySelectorAll(select.all.formInputs);
+      thisProduct.cartButton = thisProduct.element.querySelector(select.menuProduct.cartButton);
+      thisProduct.priceElem = thisProduct.element.querySelector(select.menuProduct.priceElem);
     }
 
     _accordionEventListener(e) {
@@ -83,7 +96,58 @@ const select = {
 
     initAccordion() {
       const thisProduct = this;
-      thisProduct.element.addEventListener('click', thisProduct._accordionEventListener);
+      thisProduct.accordionTrigger.addEventListener('click', thisProduct._accordionEventListener);
+    }
+
+    _orderEventListener(event) {
+      const thisProduct = this;
+      event.preventDefault();
+      thisProduct.processOrder();
+    }
+
+    initOrderForm() {
+      const thisProduct = this;
+      thisProduct.form.addEventListener('submit', thisProduct._orderEventListener);
+      thisProduct.formInputs.forEach(input => input.addEventListener('change', function() {
+        thisProduct.processOrder();
+      }));
+
+      thisProduct.cartButton.addEventListener('click', thisProduct._orderEventListener);
+    }
+
+    calculateProductPrice(productParams, optionEntry) {
+      const [optionId, option] = optionEntry;
+      if (productParams) {
+        Object.values(option).filter
+        if (option.default && !Object.values(productParams).some(productParam => productParam === optionId)) {
+          return option.price * -1;
+        }
+        if (!option.default && Object.values(productParams).some(productParam => productParam === optionId)) {
+          return option.price * 1;
+        }
+      }
+      return 0;
+    }
+
+    processOrder() {
+      const thisProduct = this;
+      const formData = utils.serializeFormToObject(thisProduct.form);
+      const amount = formData.amount[0];
+      let price = thisProduct.data.price;
+      if (thisProduct.data.params) {
+        Object.entries(thisProduct.data.params).forEach(paramEntry => {
+          const [paramId, param] = paramEntry;
+
+          Object.entries(param.options).forEach(optionEntry => {
+            price = paramId === 'sauce' && formData.sauce ? price + thisProduct.calculateProductPrice(formData.sauce, optionEntry) : price;
+            price = paramId === 'toppings' && formData.toppings ? price + thisProduct.calculateProductPrice(formData.toppings, optionEntry) : price;
+            price = paramId === 'crust' && formData.crust ? price + thisProduct.calculateProductPrice(formData.crust, optionEntry) : price;
+            price = paramId === 'ingredients' && formData.ingredients ? price + thisProduct.calculateProductPrice(formData.ingredients, optionEntry) : price;
+            price = paramId === 'coffee' && formData.coffee ? price + thisProduct.calculateProductPrice(formData.coffee, optionEntry) : price;
+          });
+        });
+      }
+      thisProduct.priceElem.innerHTML = price * amount;
     }
   }
 
