@@ -62,6 +62,7 @@ const select = {
       thisProduct.initOrderForm();
       thisProduct.processOrder();
       thisProduct.initAccordion();
+      thisProduct.initAmountWidget();
     }
 
     renderInMenu() {
@@ -81,6 +82,7 @@ const select = {
       thisProduct.cartButton = thisProduct.element.querySelector(select.menuProduct.cartButton);
       thisProduct.priceElem = thisProduct.element.querySelector(select.menuProduct.priceElem);
       thisProduct.imageWrapper = thisProduct.element.querySelector(select.menuProduct.imageWrapper);
+      thisProduct.amountWidgetElement = thisProduct.element.querySelector(select.menuProduct.amountWidget);
     }
 
     _accordionEventListener(e) {
@@ -98,6 +100,12 @@ const select = {
     initAccordion() {
       const thisProduct = this;
       thisProduct.accordionTrigger.addEventListener('click', thisProduct._accordionEventListener);
+    }
+
+    initAmountWidget() {
+      const thisProduct = this;
+      thisProduct.amountWidget = new AmountWidget(thisProduct.amountWidgetElement);
+      thisProduct.amountWidgetElement.addEventListener('updated', () => thisProduct.processOrder());
     }
 
     _orderEventListener(event) {
@@ -148,7 +156,6 @@ const select = {
     processOrder() {
       const thisProduct = this;
       const formData = utils.serializeFormToObject(thisProduct.form);
-      const amount = formData.amount[0];
       let price = thisProduct.data.price;
       //console.log(thisProduct.imageWrapper);
       if (thisProduct.data.params) {
@@ -167,7 +174,64 @@ const select = {
           });
         });
       }
-      thisProduct.priceElem.innerHTML = price * amount;
+      if (thisProduct.amountWidget) {
+        price *= thisProduct.amountWidget.amount;
+      }
+      thisProduct.priceElem.innerHTML = price;
+    }
+  }
+
+  class AmountWidget {
+    constructor(element) {
+      const thisWidget = this;
+      thisWidget.getElements(element);
+      console.log(element);
+    }
+
+    announce() {
+      const thisWidget = this;
+      const event = new Event('updated');
+      thisWidget.element.dispatchEvent(event);
+    }
+
+    _validateAndPrintAmount() {
+      const thisWidget = this;
+      const parsedAmount = parseInt(thisWidget.amount);
+      thisWidget.amount = isFinite(parsedAmount) ? parsedAmount : 10;
+
+      if (thisWidget.amount < 0) {
+        thisWidget.amount = 0;
+      }
+      if (thisWidget.amount > 10) {
+        thisWidget.amount = 10;
+      }
+
+      thisWidget.input.value = thisWidget.amount;
+      thisWidget.announce();
+    }
+
+    _setAmount(e) {
+      const thisWidget = this;
+      thisWidget.amount = e.target.value;
+      thisWidget._validateAndPrintAmount();
+    }
+
+    _clickOnAmount(amount = 0) {
+      const thisWidget = this;
+      thisWidget.amount = parseInt(thisWidget.input.value) + parseInt(amount);
+      thisWidget._validateAndPrintAmount();
+    }
+
+    getElements(element) {
+      const thisWidget = this;
+      thisWidget.element = element;
+      thisWidget.input = thisWidget.element.querySelector(select.widgets.amount.input);
+      thisWidget.linkDecrease = thisWidget.element.querySelector(select.widgets.amount.linkDecrease);
+      thisWidget.linkIncrease = thisWidget.element.querySelector(select.widgets.amount.linkIncrease);
+
+      thisWidget.input.addEventListener('change', e => thisWidget._setAmount(e));
+      thisWidget.linkDecrease.addEventListener('click', () => thisWidget._clickOnAmount(-1));
+      thisWidget.linkIncrease.addEventListener('click', () => thisWidget._clickOnAmount(1));
     }
   }
 
