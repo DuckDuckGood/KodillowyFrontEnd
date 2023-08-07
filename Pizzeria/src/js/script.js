@@ -156,7 +156,7 @@ const select = {
           const [paramId, param] = paramEntry;
 
           Object.entries(param.options).forEach(optionEntry => {
-            const [optionId, option] = optionEntry;
+            const optionId = optionEntry[0];
             const imageClass = `.${paramId}-${optionId}`;
             const image = document.querySelector(imageClass);
             price = paramId === 'sauce' && formData.sauce ? price + thisProduct.calculateProductPriceAndSetImageVisibility(formData.sauce, optionEntry, image) : price;
