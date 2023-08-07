@@ -101,7 +101,9 @@ const select = {
     }
 
     _orderEventListener(event) {
+      const thisProduct = this;
       event.preventDefault();
+      thisProduct.processOrder();
     }
 
     initOrderForm() {
@@ -114,40 +116,58 @@ const select = {
       thisProduct.cartButton.addEventListener('click', thisProduct._orderEventListener);
     }
 
+    calculateProductPriceAndSetImageVisibility(productParams, optionEntry, image) {
+      const [optionId, option] = optionEntry;
+      if (productParams) {
+        Object.values(option).filter
+        if (!Object.values(productParams).some(productParam => productParam === optionId)) {
+
+          if (image) {
+            image.classList.remove(classNames.menuProduct.wrapperActive);
+          }
+
+          if (option.default) {
+            return option.price * -1;
+          }
+        }
+
+        if (Object.values(productParams).some(productParam => productParam === optionId)) {
+
+          if (image) {
+            image.classList.add(classNames.menuProduct.wrapperActive);
+          }
+
+          if (!option.default) {
+            return option.price * 1;
+          }
+        }
+      }
+      return 0;
+    }
+
     processOrder() {
       const thisProduct = this;
       const formData = utils.serializeFormToObject(thisProduct.form);
+      const amount = formData.amount[0];
       let price = thisProduct.data.price;
       //console.log(thisProduct.imageWrapper);
       if (thisProduct.data.params) {
-        //console.log(thisProduct.data.params);
         Object.entries(thisProduct.data.params).forEach(paramEntry => {
           const [paramId, param] = paramEntry;
 
           Object.entries(param.options).forEach(optionEntry => {
             const [optionId, option] = optionEntry;
-            
-            if (formData.ingredients) {
-              const imageClass = `.${paramId}-${optionId}`;
-              const image = document.querySelector(imageClass);
-              if (!Object.values(formData.ingredients).some(ingredient => ingredient === optionId)) {
-                if (option.default) {
-                  price--;
-                }
-                image.classList.remove(classNames.menuProduct.wrapperActive);
-              }
-              
-              if (Object.values(formData.ingredients).some(ingredient => ingredient === optionId)) {
-                if (!option.default) {
-                  price++;
-                }
-                image.classList.add(classNames.menuProduct.wrapperActive);
-              }
-            }
+            const imageClass = `.${paramId}-${optionId}`;
+            const image = document.querySelector(imageClass);
+            price = paramId === 'sauce' && formData.sauce ? price + thisProduct.calculateProductPriceAndSetImageVisibility(formData.sauce, optionEntry, image) : price;
+            price = paramId === 'toppings' && formData.toppings ? price + thisProduct.calculateProductPriceAndSetImageVisibility(formData.toppings, optionEntry, image) : price;
+            price = paramId === 'crust' && formData.crust ? price + thisProduct.calculateProductPriceAndSetImageVisibility(formData.crust, optionEntry, image) : price;
+            price = paramId === 'ingredients' && formData.ingredients ? price + thisProduct.calculateProductPriceAndSetImageVisibility(formData.ingredients, optionEntry, image) : price;
+            price = paramId === 'coffee' && formData.coffee ? price + thisProduct.calculateProductPriceAndSetImageVisibility(formData.coffee, optionEntry, image) : price;
           });
         });
       }
-      thisProduct.priceElem.innerHTML = price;
+      thisProduct.priceElem.innerHTML = price * amount;
     }
   }
 
