@@ -153,9 +153,13 @@ export class Product {
   prepareCartProductParams(productSummary) {
     const thisProduct = this;
 
+    if (!productSummary.params) {
+      productSummary.params = {};
+    }
+
     Object.entries(thisProduct.orderData).forEach(orderEntry => {
       const [orderId, order] = orderEntry;
-      productSummary[orderId] = order;
+      productSummary.params[orderId] = order;
     })
   }
 
