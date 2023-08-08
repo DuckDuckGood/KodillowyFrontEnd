@@ -18,6 +18,9 @@ export class Cart {
     thisCart.dom.toggleTrigger = thisCart.dom.wrapper.querySelector(select.cart.toggleTrigger);
     thisCart.dom.productList = thisCart.dom.wrapper.querySelector(select.cart.productList);
     thisCart.dom.totalPrice = thisCart.dom.wrapper.querySelector(select.cart.totalPrice);
+    thisCart.dom.subTotal = thisCart.dom.wrapper.querySelector(select.cart.subtotalPrice);
+    thisCart.dom.delivery = thisCart.dom.wrapper.querySelector(select.cart.deliveryFee);
+    thisCart.dom.totalWithDelivery = thisCart.dom.wrapper.querySelectorAll(select.cart.totalPrice)[1];
   }
 
   _cartVisibilityToggle() {
@@ -32,15 +35,38 @@ export class Cart {
 
   updateTotalPrice() {
     const thisCart = this;
-    let totalPrice = 0;
-
+    thisCart.totalPrice = 0;
+    
     if (thisCart.products) {
       Object.values(thisCart.products).forEach(product => {
-        totalPrice += parseInt(product.summaryPrice);
+        thisCart.totalPrice += parseInt(product.summaryPrice);
       });
     }
 
-    thisCart.dom.totalPrice.innerHTML = totalPrice;
+    thisCart.dom.totalPrice.innerHTML = thisCart.totalPrice;
+    this.addDeliveryCost();
+  }
+
+  addDeliveryCost() {
+    const thisCart = this;
+    thisCart.dom.subTotal.innerHTML = thisCart.totalPrice;
+    thisCart.dom.delivery.innerHTML = 20;
+    thisCart.dom.totalWithDelivery.innerHTML = 20 + parseInt(thisCart.totalPrice);
+  }
+
+  removeProduct(e) {
+    const thisCart = this;
+
+    const newProductArray = [];
+
+    Object.values(thisCart.products)
+      .filter(product => product !== e.detail.cartProduct)
+      .forEach(product => newProductArray.push(product));
+
+    thisCart.products = newProductArray;
+
+    thisCart.dom.productList.removeChild(e.detail.cartProduct.dom.wrapper);
+    thisCart.updateTotalPrice();
   }
 
   add(menuProduct) {
@@ -49,11 +75,14 @@ export class Cart {
     const generatedHTML = templates.cartProduct(menuProduct);
     const cartProductDOM = utils.createDOMFromHTML(generatedHTML);
     
-    cartProductDOM.addEventListener('updated', () => thisCart.updateTotalPrice());
     thisCart.dom.productList.appendChild(cartProductDOM);
 
     const cartProduct = new CartProduct(menuProduct, cartProductDOM);
+    
     thisCart.products.push(cartProduct);
     thisCart.updateTotalPrice();
+
+    thisCart.dom.productList.addEventListener('updated', () => thisCart.updateTotalPrice());
+    thisCart.dom.productList.addEventListener('removed', e => thisCart.removeProduct(e));
   }
 }
