@@ -47,6 +47,8 @@ export class AmountWidget {
     thisWidget.linkDecrease = thisWidget.element.querySelector(select.widgets.amount.linkDecrease);
     thisWidget.linkIncrease = thisWidget.element.querySelector(select.widgets.amount.linkIncrease);
 
+    thisWidget.input.value = 1; //default value
+
     thisWidget.input.addEventListener('change', e => thisWidget._setAmount(e));
     thisWidget.linkDecrease.addEventListener('click', () => thisWidget._clickOnAmount(-1));
     thisWidget.linkIncrease.addEventListener('click', () => thisWidget._clickOnAmount(1));

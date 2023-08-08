@@ -26,14 +26,15 @@ export class Product {
 
   getElements(){
     const thisProduct = this;
+    thisProduct.dom = {};
   
-    thisProduct.accordionTrigger = thisProduct.element.querySelector(select.menuProduct.clickable);
-    thisProduct.form = thisProduct.element.querySelector(select.menuProduct.form);
-    thisProduct.formInputs = thisProduct.form.querySelectorAll(select.all.formInputs);
-    thisProduct.cartButton = thisProduct.element.querySelector(select.menuProduct.cartButton);
-    thisProduct.priceElem = thisProduct.element.querySelector(select.menuProduct.priceElem);
-    thisProduct.imageWrapper = thisProduct.element.querySelector(select.menuProduct.imageWrapper);
-    thisProduct.amountWidgetElement = thisProduct.element.querySelector(select.menuProduct.amountWidget);
+    thisProduct.dom.accordionTrigger = thisProduct.element.querySelector(select.menuProduct.clickable);
+    thisProduct.dom.form = thisProduct.element.querySelector(select.menuProduct.form);
+    thisProduct.dom.formInputs = thisProduct.dom.form.querySelectorAll(select.all.formInputs);
+    thisProduct.dom.cartButton = thisProduct.element.querySelector(select.menuProduct.cartButton);
+    thisProduct.dom.priceElem = thisProduct.element.querySelector(select.menuProduct.priceElem);
+    thisProduct.dom.imageWrapper = thisProduct.element.querySelector(select.menuProduct.imageWrapper);
+    thisProduct.dom.amountWidgetElement = thisProduct.element.querySelector(select.menuProduct.amountWidget);
   }
 
   _accordionEventListener(e) {
@@ -50,13 +51,13 @@ export class Product {
 
   initAccordion() {
     const thisProduct = this;
-    thisProduct.accordionTrigger.addEventListener('click', thisProduct._accordionEventListener);
+    thisProduct.dom.accordionTrigger.addEventListener('click', thisProduct._accordionEventListener);
   }
 
   initAmountWidget() {
     const thisProduct = this;
-    thisProduct.amountWidget = new AmountWidget(thisProduct.amountWidgetElement);
-    thisProduct.amountWidgetElement.addEventListener('updated', () => thisProduct.processOrder());
+    thisProduct.amountWidget = new AmountWidget(thisProduct.dom.amountWidgetElement);
+    thisProduct.dom.amountWidgetElement.addEventListener('updated', () => thisProduct.processOrder());
   }
 
   _orderEventListener(event) {
@@ -67,12 +68,12 @@ export class Product {
 
   initOrderForm() {
     const thisProduct = this;
-    thisProduct.form.addEventListener('submit', thisProduct._orderEventListener);
-    thisProduct.formInputs.forEach(input => input.addEventListener('change', function() {
+    thisProduct.dom.form.addEventListener('submit', thisProduct._orderEventListener);
+    thisProduct.dom.formInputs.forEach(input => input.addEventListener('change', function() {
       thisProduct.processOrder();
     }));
 
-    thisProduct.cartButton.addEventListener('click', thisProduct._orderEventListener);
+    thisProduct.dom.cartButton.addEventListener('click', thisProduct._orderEventListener);
   }
 
   calculateProductPriceAndSetImageVisibility(productParams, optionEntry, image) {
@@ -106,7 +107,7 @@ export class Product {
 
   processOrder() {
     const thisProduct = this;
-    const formData = utils.serializeFormToObject(thisProduct.form);
+    const formData = utils.serializeFormToObject(thisProduct.dom.form);
     let price = thisProduct.data.price;
     if (thisProduct.data.params) {
       Object.entries(thisProduct.data.params).forEach(paramEntry => {
@@ -127,6 +128,6 @@ export class Product {
     if (thisProduct.amountWidget) {
       price *= thisProduct.amountWidget.amount;
     }
-    thisProduct.priceElem.innerHTML = price;
+    thisProduct.dom.priceElem.innerHTML = price;
   }
 }
