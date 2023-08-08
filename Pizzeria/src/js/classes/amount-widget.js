@@ -4,7 +4,6 @@ export class AmountWidget {
   constructor(element) {
     const thisWidget = this;
     thisWidget.getElements(element);
-    console.log(element);
   }
 
   announce() {

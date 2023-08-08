@@ -108,7 +108,6 @@ export class Product {
     const thisProduct = this;
     const formData = utils.serializeFormToObject(thisProduct.form);
     let price = thisProduct.data.price;
-    //console.log(thisProduct.imageWrapper);
     if (thisProduct.data.params) {
       Object.entries(thisProduct.data.params).forEach(paramEntry => {
         const [paramId, param] = paramEntry;
