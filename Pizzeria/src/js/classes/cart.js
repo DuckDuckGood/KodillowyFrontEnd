@@ -29,6 +29,7 @@ export class Cart {
   }
 
   add(menuProduct) {
+    console.log(menuProduct);
     const thisCart = this;
     
     const generatedHTML = templates.cartProduct(menuProduct);

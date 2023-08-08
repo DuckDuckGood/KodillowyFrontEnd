@@ -119,6 +119,11 @@ export class Product {
     if (thisProduct.data.params) {
       Object.entries(thisProduct.data.params).forEach(paramEntry => {
         const [paramId, param] = paramEntry;
+        
+        if (!thisProduct.orderData[paramId]) {
+          thisProduct.orderData[paramId] = {};
+          thisProduct.orderData[paramId].label = param.label;
+        }
 
         Object.entries(param.options).forEach(optionEntry => {
           const optionId = optionEntry[0];
@@ -127,10 +132,10 @@ export class Product {
 
           Object.values(thisProduct.categories).forEach(category => {
             if (paramId === category && formData[category]) {
-              if (!thisProduct.orderData[category]) {
-                thisProduct.orderData[category] = {};
+              if (!thisProduct.orderData[paramId].options) {
+                thisProduct.orderData[paramId].options = {};
               }
-              price += thisProduct.calculateProductPriceAndSetImageVisibility(formData[category], optionEntry, image, thisProduct.orderData[category]);
+              price += thisProduct.calculateProductPriceAndSetImageVisibility(formData[category], optionEntry, image, thisProduct.orderData[paramId].options);
             }
           });
 
@@ -145,6 +150,15 @@ export class Product {
     thisProduct.dom.priceElem.innerHTML = price;
   }
 
+  prepareCartProductParams(productSummary) {
+    const thisProduct = this;
+
+    Object.entries(thisProduct.orderData).forEach(orderEntry => {
+      const [orderId, order] = orderEntry;
+      productSummary[orderId] = order;
+    })
+  }
+
   prepareCartProduct() {
     const thisProduct = this;
     const finiteAmount = isFinite(thisProduct.amountWidget.amount) ? thisProduct.amountWidget.amount : 1;
@@ -153,9 +167,9 @@ export class Product {
       name: thisProduct.data.name,
       price: thisProduct.singlePrice,
       summaryPrice: thisProduct.summaryPrice,
-      amount: finiteAmount,
-      orderData: thisProduct.orderData,
+      amount: finiteAmount
     };
+    this.prepareCartProductParams(productSummary);
     thisProduct.productSummary = productSummary;
   }
 
