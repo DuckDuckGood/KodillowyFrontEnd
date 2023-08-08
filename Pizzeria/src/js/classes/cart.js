@@ -1,4 +1,6 @@
-import { classNames, select } from "../helpers.js";
+import { classNames, select, templates } from "../helpers.js";
+
+/* global Handlebars, utils, dataSource */ // eslint-disable-line no-unused-vars
 
 export class Cart {
   constructor (element) {
@@ -12,8 +14,8 @@ export class Cart {
     const thisCart = this;
     thisCart.dom = {};
     thisCart.dom.wrapper = element;
-
     thisCart.dom.toggleTrigger = thisCart.dom.wrapper.querySelector(select.cart.toggleTrigger);
+    thisCart.dom.productList = thisCart.dom.wrapper.querySelector(select.cart.productList);
   }
 
   _cartVisibilityToggle() {
@@ -24,5 +26,13 @@ export class Cart {
   initActions() {
     const thisCart = this;
     thisCart.dom.toggleTrigger.addEventListener('click', () => thisCart._cartVisibilityToggle());
+  }
+
+  add(menuProduct) {
+    const thisCart = this;
+    
+    const generatedHTML = templates.cartProduct(menuProduct);
+    thisCart.element = utils.createDOMFromHTML(generatedHTML);
+    thisCart.dom.productList.appendChild(thisCart.element);
   }
 }

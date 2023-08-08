@@ -1,4 +1,4 @@
-import { classNames, select, templates } from "../helpers.js";
+import { app, classNames, select, templates } from "../helpers.js";
 import { AmountWidget } from "./amount-widget.js";
 
 /* global Handlebars, utils, dataSource */ // eslint-disable-line no-unused-vars
@@ -73,10 +73,13 @@ export class Product {
       thisProduct.processOrder();
     }));
 
-    thisProduct.dom.cartButton.addEventListener('click', thisProduct._orderEventListener);
+    thisProduct.dom.cartButton.addEventListener('click', event => {
+      thisProduct._orderEventListener(event);
+      thisProduct.addToCart();
+    });
   }
 
-  calculateProductPriceAndSetImageVisibility(productParams, optionEntry, image) {
+  calculateProductPriceAndSetImageVisibility(productParams, optionEntry, image, orderDataCategory) {
     const [optionId, option] = optionEntry;
     if (productParams) {
       Object.values(option).filter
@@ -93,6 +96,8 @@ export class Product {
 
       if (Object.values(productParams).some(productParam => productParam === optionId)) {
 
+        orderDataCategory[optionId] = option.label;
+
         if (image) {
           image.classList.add(classNames.menuProduct.wrapperActive);
         }
@@ -107,6 +112,8 @@ export class Product {
 
   processOrder() {
     const thisProduct = this;
+    thisProduct.orderData = {};
+    thisProduct.categories = ['sauce', 'toppings', 'crust', 'ingredients', 'coffee'];
     const formData = utils.serializeFormToObject(thisProduct.dom.form);
     let price = thisProduct.data.price;
     if (thisProduct.data.params) {
@@ -117,17 +124,44 @@ export class Product {
           const optionId = optionEntry[0];
           const imageClass = `.${paramId}-${optionId}`;
           const image = document.querySelector(imageClass);
-          price = paramId === 'sauce' && formData.sauce ? price + thisProduct.calculateProductPriceAndSetImageVisibility(formData.sauce, optionEntry, image) : price;
-          price = paramId === 'toppings' && formData.toppings ? price + thisProduct.calculateProductPriceAndSetImageVisibility(formData.toppings, optionEntry, image) : price;
-          price = paramId === 'crust' && formData.crust ? price + thisProduct.calculateProductPriceAndSetImageVisibility(formData.crust, optionEntry, image) : price;
-          price = paramId === 'ingredients' && formData.ingredients ? price + thisProduct.calculateProductPriceAndSetImageVisibility(formData.ingredients, optionEntry, image) : price;
-          price = paramId === 'coffee' && formData.coffee ? price + thisProduct.calculateProductPriceAndSetImageVisibility(formData.coffee, optionEntry, image) : price;
+
+          Object.values(thisProduct.categories).forEach(category => {
+            if (paramId === category && formData[category]) {
+              if (!thisProduct.orderData[category]) {
+                thisProduct.orderData[category] = {};
+              }
+              price += thisProduct.calculateProductPriceAndSetImageVisibility(formData[category], optionEntry, image, thisProduct.orderData[category]);
+            }
+          });
+
         });
       });
     }
-    if (thisProduct.amountWidget) {
+    thisProduct.singlePrice = price;
+    if (thisProduct.amountWidget && isFinite(thisProduct.amountWidget.amount)) {
       price *= thisProduct.amountWidget.amount;
     }
+    thisProduct.summaryPrice = price;
     thisProduct.dom.priceElem.innerHTML = price;
+  }
+
+  prepareCartProduct() {
+    const thisProduct = this;
+    const finiteAmount = isFinite(thisProduct.amountWidget.amount) ? thisProduct.amountWidget.amount : 1;
+    const productSummary = {
+      id: thisProduct.id,
+      name: thisProduct.data.name,
+      price: thisProduct.singlePrice,
+      summaryPrice: thisProduct.summaryPrice,
+      amount: finiteAmount,
+      orderData: thisProduct.orderData,
+    };
+    thisProduct.productSummary = productSummary;
+  }
+
+  addToCart() {
+    const thisProduct = this;
+    thisProduct.prepareCartProduct();
+    app.cart.add(thisProduct.productSummary);
   }
 }

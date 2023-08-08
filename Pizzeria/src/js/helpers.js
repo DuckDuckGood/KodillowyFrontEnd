@@ -1,3 +1,8 @@
+import { Cart } from "./classes/cart.js";
+import { Product } from "./classes/product.js";
+
+/* global Handlebars, utils, dataSource */ // eslint-disable-line no-unused-vars
+
 export const select = {
   templateOf: {
     menuProduct: '#template-menu-product',
@@ -79,4 +84,29 @@ export const templates = {
   // CODE ADDED START
   cartProduct: Handlebars.compile(document.querySelector(select.templateOf.cartProduct).innerHTML),
   // CODE ADDED END
+};
+
+export const app = {
+  initMenu: function() {
+    const thisApp = this;
+    Object.entries(thisApp.data.products).forEach(entry => {
+      const [key, value] = entry;
+      new Product(key, value);
+    });
+  },
+  initData: function() {
+    const thisApp = this;
+    thisApp.data = dataSource;
+  },
+  initCart: function() {
+    const thisApp = this;
+    const cartElem = document.querySelector(select.containerOf.cart);
+    thisApp.cart = new Cart(cartElem);
+  },
+  init: function(){
+    const thisApp = this;
+    thisApp.initData();
+    thisApp.initMenu();
+    thisApp.initCart();
+  },
 };
