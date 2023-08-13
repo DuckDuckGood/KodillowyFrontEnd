@@ -5,13 +5,5 @@ import { app } from "./helpers.js";
 {
   'use strict';
 
-  const settings = { // eslint-disable-line no-unused-vars
-    amountWidget: {
-      defaultValue: 1,
-      defaultMin: 1,
-      defaultMax: 9,
-    }
-  };
-
   app.init();
 }

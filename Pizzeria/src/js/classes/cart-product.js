@@ -57,4 +57,17 @@ export class CartProduct {
     const thisCartProduct = this;
     thisCartProduct.dom.remove.addEventListener('click', () => this.remove());
   }
+
+  getData() {
+    const thisCartProduct = this;
+
+    return {
+      id: thisCartProduct.id,
+      amount: thisCartProduct.amount,
+      price: thisCartProduct.price ? thisCartProduct.price : 0,
+      priceSingle: thisCartProduct.priceSingle ? thisCartProduct.priceSingle : 0,
+      name: thisCartProduct.name,
+      params: thisCartProduct.params,
+    }
+  }
 }

@@ -3,6 +3,46 @@ import { Product } from "./classes/product.js";
 
 /* global Handlebars, utils, dataSource */ // eslint-disable-line no-unused-vars
 
+const connectionSettings = {
+  amountWidget: {
+    defaultValue: 1,
+    defaultMin: 1,
+    defaultMax: 9,
+  },
+  db: {
+    url: 'http://localhost:3131',
+    products: 'products',
+    orders: 'orders',
+  },
+};
+
+const fetchUrl = `${connectionSettings.db.url}/${connectionSettings.db.products}`;
+const sendOrdersUrl = `${connectionSettings.db.url}/${connectionSettings.db.orders}`;
+
+async function fetchJson(url) {
+  let response;
+
+  await fetch(url)
+    .then(rawResponse => rawResponse.json())
+    .then(parsedResponse => {
+      response = parsedResponse;
+    });
+  return response;
+}
+
+export async function sendOrders(payload) {
+  const request = {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify(payload),
+  };
+  fetch(sendOrdersUrl, request)
+    .then(response => response.json())
+    .then(parsedResponse => console.log('parsedResponse', parsedResponse));
+}
+
 export const select = {
   templateOf: {
     menuProduct: '#template-menu-product',
@@ -89,23 +129,23 @@ export const templates = {
 export const app = {
   initMenu: function() {
     const thisApp = this;
-    Object.entries(thisApp.data.products).forEach(entry => {
+    Object.entries(thisApp.data).forEach(entry => {
       const [key, value] = entry;
       new Product(key, value);
     });
   },
-  initData: function() {
+  initData: async function() {
     const thisApp = this;
-    thisApp.data = dataSource;
+    thisApp.data = await fetchJson(fetchUrl);
   },
   initCart: function() {
     const thisApp = this;
     const cartElem = document.querySelector(select.containerOf.cart);
     thisApp.cart = new Cart(cartElem);
   },
-  init: function(){
+  init: async function(){
     const thisApp = this;
-    thisApp.initData();
+    await thisApp.initData();
     thisApp.initMenu();
     thisApp.initCart();
   },

@@ -1,4 +1,4 @@
-import { classNames, select, templates } from "../helpers.js";
+import { classNames, select, sendOrders, templates } from "../helpers.js";
 import { CartProduct } from "./cart-product.js";
 
 /* global Handlebars, utils, dataSource */ // eslint-disable-line no-unused-vars
@@ -15,6 +15,7 @@ export class Cart {
     const thisCart = this;
     thisCart.dom = {};
     thisCart.dom.wrapper = element;
+    thisCart.dom.form = thisCart.dom.wrapper.querySelector(select.cart.form);
     thisCart.dom.toggleTrigger = thisCart.dom.wrapper.querySelector(select.cart.toggleTrigger);
     thisCart.dom.productList = thisCart.dom.wrapper.querySelector(select.cart.productList);
     thisCart.dom.totalPrice = thisCart.dom.wrapper.querySelector(select.cart.totalPrice);
@@ -28,9 +29,44 @@ export class Cart {
     thisCart.dom.wrapper.classList.toggle(classNames.cart.wrapperActive);
   }
 
+  preparePayload() {
+    const thisCart = this;
+
+    thisCart.payload = {
+      address: thisCart.dom.wrapper.querySelector(select.cart.address).value,
+      phone: thisCart.dom.wrapper.querySelector(select.cart.phone).value,
+      totalPrice: thisCart.totalWithDelivery
+        ? thisCart.totalWithDelivery
+        : 0,
+      subtotalPrice: thisCart.totalPrice
+        ? thisCart.totalPrice
+        : 0,
+      totalNumber: thisCart.dom.wrapper.querySelector(select.cart.totalNumber).value,
+      deliveryFee: thisCart.totalWithDelivery && thisCart.totalPrice
+        ? parseInt(thisCart.totalWithDelivery) - parseInt(thisCart.totalPrice)
+        : 0,
+        products: [],
+    };
+
+    Object.values(thisCart.products).forEach(product => thisCart.payload.products.push(product.getData()));
+  }
+
+  sendOrders() {
+    const thisCart = this;
+    thisCart.preparePayload();
+    sendOrders(thisCart.payload);
+  }
+
+  _submitHandler(e) {
+    const thisCart = this;
+    thisCart.sendOrders();
+    e.preventDefault();
+  }
+
   initActions() {
     const thisCart = this;
     thisCart.dom.toggleTrigger.addEventListener('click', () => thisCart._cartVisibilityToggle());
+    thisCart.dom.form.addEventListener('submit', e => thisCart._submitHandler(e));
   }
 
   updateTotalPrice() {
