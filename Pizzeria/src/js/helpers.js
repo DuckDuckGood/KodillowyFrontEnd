@@ -1,9 +1,6 @@
-import { Cart } from "./classes/cart.js";
-import { Product } from "./classes/product.js";
-
 /* global Handlebars, utils, dataSource */ // eslint-disable-line no-unused-vars
 
-const connectionSettings = {
+export const connectionSettings = {
   amountWidget: {
     defaultValue: 1,
     defaultMin: 1,
@@ -13,22 +10,29 @@ const connectionSettings = {
     url: 'http://localhost:3131',
     products: 'products',
     orders: 'orders',
+    product: 'product',
+    order: 'order',
+    booking: 'booking',
+    event: 'event',
+    dateStartParamKey: 'date_gte',
+    dateEndParamKey: 'date_lte',
+    notRepeatParam: 'repeat=false',
+    repeatParam: 'repeat_ne=false',
+  },
+  hours: {
+    open: 12,
+    close: 24,
+  },
+  datePicker: {
+      maxDaysInFuture: 14,
+  },
+  booking: {
+      tableIdAttribute: 'data-table',
   },
 };
 
-const fetchUrl = `${connectionSettings.db.url}/${connectionSettings.db.products}`;
+
 const sendOrdersUrl = `${connectionSettings.db.url}/${connectionSettings.db.orders}`;
-
-async function fetchJson(url) {
-  let response;
-
-  await fetch(url)
-    .then(rawResponse => rawResponse.json())
-    .then(parsedResponse => {
-      response = parsedResponse;
-    });
-  return response;
-}
 
 export async function sendOrders(payload) {
   const request = {
@@ -47,10 +51,14 @@ export const select = {
   templateOf: {
     menuProduct: '#template-menu-product',
     cartProduct: '#template-cart-product', // CODE ADDED
+    bookingWidget: '#template-booking-widget',
   },
   containerOf: {
     menu: '#product-list',
     cart: '#cart',
+    pages: '#pages',
+    booking: '.booking-wrapper',
+    mainNav: '.main-nav',
   },
   all: {
     menuProducts: '#product-list > .product',
@@ -70,6 +78,15 @@ export const select = {
       input: 'input.amount', // CODE CHANGED
       linkDecrease: 'a[href="#less"]',
       linkIncrease: 'a[href="#more"]',
+    },
+    datePicker: {
+      wrapper: '.date-picker',
+      input: `input[name="date"]`,
+    },
+    hourPicker: {
+        wrapper: '.hour-picker',
+        input: 'input[type="range"]',
+        output: '.output',
     },
   },
   // CODE ADDED START
@@ -92,6 +109,14 @@ export const select = {
     remove: '[href="#remove"]',
   },
   // CODE ADDED END
+  booking: {
+    peopleAmount: '.people-amount',
+    hoursAmount: '.hours-amount',
+    tables: '.floor-plan .table',
+  },
+  nav: {
+      links: '.main-nav a',
+  },
 };
 
 export const classNames = {
@@ -104,6 +129,16 @@ export const classNames = {
     wrapperActive: 'active',
   },
   // CODE ADDED END
+  booking: {
+    loading: 'loading',
+    tableBooked: 'booked',
+  },
+  nav: {
+      active: 'active',
+  },
+  pages: {
+      active: 'active',
+  }
 };
 
 export const settings = {
@@ -117,6 +152,7 @@ export const settings = {
     defaultDeliveryFee: 20,
   },
   // CODE ADDED END
+  
 };
 
 export const templates = {
@@ -124,29 +160,5 @@ export const templates = {
   // CODE ADDED START
   cartProduct: Handlebars.compile(document.querySelector(select.templateOf.cartProduct).innerHTML),
   // CODE ADDED END
-};
-
-export const app = {
-  initMenu: function() {
-    const thisApp = this;
-    Object.entries(thisApp.data).forEach(entry => {
-      const [key, value] = entry;
-      new Product(key, value);
-    });
-  },
-  initData: async function() {
-    const thisApp = this;
-    thisApp.data = await fetchJson(fetchUrl);
-  },
-  initCart: function() {
-    const thisApp = this;
-    const cartElem = document.querySelector(select.containerOf.cart);
-    thisApp.cart = new Cart(cartElem);
-  },
-  init: async function(){
-    const thisApp = this;
-    await thisApp.initData();
-    thisApp.initMenu();
-    thisApp.initCart();
-  },
+  bookingWidget: Handlebars.compile(document.querySelector(select.templateOf.bookingWidget).innerHTML),
 };
