@@ -1,4 +1,5 @@
-import { app, classNames, select, templates } from "../helpers.js";
+import { app } from "../app.js";
+import { classNames, select, templates } from "../helpers.js";
 import { AmountWidget } from "./amount-widget.js";
 
 /* global Handlebars, utils, dataSource */ // eslint-disable-line no-unused-vars
@@ -44,7 +45,7 @@ export class Product {
     }
 
     const activeElements = document.getElementsByClassName(classNames.menuProduct.wrapperActive);
-    Object.values(activeElements).filter(el => el.nodeName !== 'IMG' && el !== element).forEach(element => element.classList.remove(classNames.menuProduct.wrapperActive));
+    Object.values(activeElements).filter(el => el.nodeName !== 'IMG' && el.nodeName !== 'SECTION' && el !== element).forEach(element => element.classList.remove(classNames.menuProduct.wrapperActive));
     
     element.classList.toggle(classNames.menuProduct.wrapperActive);
   }
