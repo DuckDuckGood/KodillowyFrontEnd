@@ -1,11 +1,12 @@
-import * as dom from './utils/dom';
-import * as func from './utils/functions';
-import './range-slider.css';
+import * as dom from './utils/dom.js';
+import * as func from './utils/functions.js';
+// import './range-slider.css';
 
 const newLineAndTabRegexp = new RegExp('/[\\n\\t]/', 'g');
 const MAX_SET_BY_DEFAULT = 100;
 const HANDLE_RESIZE_DELAY = 300;
 const HANDLE_RESIZE_DEBOUNCE = 50;
+const VERSION = 1;
 
 const pluginName = 'rangeSlider';
 const inputrange = dom.supportsRange();
@@ -37,7 +38,7 @@ let verticalSlidingFixRegistered = false;
  * @param {HTMLElement} element
  * @param {this} options
  */
-export default class RangeSlider {
+export class RangeSlider {
   constructor(element, options) {
     let minSetByDefault;
     let maxSetByDefault;
@@ -272,7 +273,7 @@ export default class RangeSlider {
     this.onSlideEventsCount = 0;
     this.needTriggerEvents = false;
     return this;
-  };
+  }
 
   destroy() {
     dom.removeAllListenersFromEl(this, this.options.root);

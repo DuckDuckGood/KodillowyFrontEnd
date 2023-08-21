@@ -1,5 +1,6 @@
 import { BaseWidget } from './base-widget.js';
 import { select, connectionSettings } from '../helpers.js';
+import { RangeSlider } from '../../vendor/range-slider.js';
 
 /* global Handlebars, utils, dataSource, require */ // eslint-disable-line no-unused-vars
 
@@ -17,7 +18,7 @@ export class HourPicker extends BaseWidget{
   initPlugin(){
     const thisWidget = this;
     // eslint-disable-next-line no-undef
-    rangeSlider.create(thisWidget.dom.input);
+    RangeSlider.create(thisWidget.dom.input);
     thisWidget.dom.input.addEventListener('input', function(){
       thisWidget.value = thisWidget.dom.input.value;
     });
