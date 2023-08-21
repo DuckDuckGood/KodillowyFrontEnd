@@ -42,9 +42,7 @@ export async function sendOrders(payload) {
     },
     body: JSON.stringify(payload),
   };
-  fetch(sendOrdersUrl, request)
-    .then(response => response.json())
-    .then(parsedResponse => console.log('parsedResponse', parsedResponse));
+  fetch(sendOrdersUrl, request);
 }
 
 export const select = {

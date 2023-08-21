@@ -1,7 +1,9 @@
 import { AmountWidget } from './amount-widget.js';
 import { select, templates } from '../helpers.js';
+import { DatePicker } from './DatePicker.js';
+import { HourPicker } from './HourPicker.js';
 
-/* global Handlebars, utils, dataSource */ // eslint-disable-line no-unused-vars
+/* global Handlebars, utils, dataSource, require */ // eslint-disable-line no-unused-vars
 
 export class Booking {
   constructor(element) {
@@ -16,6 +18,8 @@ export class Booking {
 
     this.dom.peopleAmount = this.dom.wrapper.querySelector(select.booking.peopleAmount);
     this.dom.hoursAmount = this.dom.wrapper.querySelector(select.booking.hoursAmount);
+    this.dom.datePicker = this.dom.wrapper.querySelector(select.widgets.datePicker.wrapper);
+    this.dom.hourPicker = this.dom.wrapper.querySelector(select.widgets.hourPicker.wrapper);
   }
 
   peopleWidgetHandler(e) {
@@ -32,5 +36,8 @@ export class Booking {
 
     this.hoursAmount = new AmountWidget(this.dom.hoursAmount);
     this.dom.hoursAmount.addEventListener('click', e => this.hoursWidgetHandler(e));
+
+    this.datePicker = new DatePicker(this.dom.datePicker);
+    this.hourPicker = new HourPicker(this.dom.hourPicker);
   }
 }
