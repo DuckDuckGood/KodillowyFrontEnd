@@ -253,7 +253,48 @@
      "duration": 2,
      "ppl": 3,
      "starters": ["lemonWater"]
-   }
+   },
+   {
+      "id": 5,
+      "date": "2023-07-04",
+      "hour": "18:00",
+      "table": 2,
+      "repeat": false,
+      "duration": 2,
+      "ppl": 3,
+      "starters": ["lemonWater"]
+    },
+    {
+      "id": 5,
+      "date": "2023-08-04",
+      "hour": "18:00",
+      "table": 2,
+      "repeat": false,
+      "duration": 2,
+      "ppl": 3,
+      "starters": ["lemonWater"]
+    }
  ],
- "bookings": []
+ "bookings": [
+   {
+   "id": 1,
+   "date": "2023-08-05",
+   "hour": "12:30",
+   "table": 1,
+   "repeat": false,
+   "duration": 4,
+   "ppl": 3,
+   "starters": []
+ },
+ {
+   "id": 5,
+   "date": "2023-08-27",
+   "hour": "12:00",
+   "table": 1,
+   "repeat": false,
+   "duration": 4,
+   "ppl": 3,
+   "starters": []
+ }
+]
 }

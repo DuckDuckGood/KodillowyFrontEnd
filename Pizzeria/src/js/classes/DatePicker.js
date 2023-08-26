@@ -30,10 +30,24 @@ export class DatePicker extends BaseWidget{
         }
       ],
       onChange: function(selectedDates, dateStr) {
-        thisWidget.value = dateStr;
+        thisWidget.dateStr = dateStr;
+        thisWidget.updateMinAndMaxDates();
+      },
+      onReady: function(selectedDates, dateStr) {
+        thisWidget.dateStr = dateStr;
       },
     });
   }
+
+  updateMinAndMaxDates() {
+    if (this.dateStr) {
+      this.minDate = new Date(this.dateStr);
+      const maxDate = new Date(this.dateStr);
+      maxDate.setDate(parseInt(maxDate.getDate) + 14);
+      this.maxDate = maxDate;
+    }
+  }
+
   parseValue(value){
     return value;
   }
@@ -44,5 +58,10 @@ export class DatePicker extends BaseWidget{
 
   renderValue(){
 
+  }
+
+  getParsedDate() {
+    const thisWidget = this;
+    return thisWidget.dateStr;
   }
 }

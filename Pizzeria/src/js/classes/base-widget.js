@@ -20,7 +20,6 @@ export class BaseWidget {
   }
 
   validateAndPrintAmount(scope = {}) {
-    console.log(scope);
 
     if (!this.correctValue) {
       this.correctValue = 1;
@@ -35,7 +34,10 @@ export class BaseWidget {
         )
       : 1;
 
-      // this.setValue(this.correctValue);
+      if (this.dom.input) {
+        this.dom.input.value = this.correctValue;
+      }
+      //this.setValue(this.correctValue);
       this.announce();
   }
 

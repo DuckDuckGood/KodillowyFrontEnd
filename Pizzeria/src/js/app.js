@@ -1,20 +1,9 @@
 import { Booking } from './classes/booking.js';
 import { Cart } from './classes/cart.js';
 import { Product } from './classes/product.js';
-import { classNames, connectionSettings, select } from './helpers.js';
+import { classNames, connectionSettings, fetchFromUrl, select } from './helpers.js';
 
 const fetchUrl = `${connectionSettings.db.url}/${connectionSettings.db.products}`;
-
-async function fetchJson(url) {
-  let response;
-
-  await fetch(url)
-    .then(rawResponse => rawResponse.json())
-    .then(parsedResponse => {
-      response = parsedResponse;
-    });
-  return response;
-}
 
 function getIdFromHref(e) {
   e.preventDefault();
@@ -62,7 +51,7 @@ export const app = {
   },
   initData: async function() {
     const thisApp = this;
-    thisApp.data = await fetchJson(fetchUrl);
+    thisApp.data = await fetchFromUrl(fetchUrl);
   },
   initCart: function() {
     const thisApp = this;
