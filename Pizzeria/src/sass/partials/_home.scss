@@ -1,0 +1,133 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300&display=swap');
+$font-poppins: 'Poppins', sans-serif;
+$color-wisteria: #8e44ad;
+
+.flexbox-container {
+  display: flex;
+  font-family: $font-poppins;
+  color: $color-light;
+  font-size: 18px;
+  flex-direction: column;
+}
+
+.bookmark-images {
+  flex: 100%;
+  display: flex;
+  justify-content: space-around;
+  width: 100%;
+}
+
+.bookmark-image {
+  display: flex;
+  width: 49%;
+  height: 125px;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: 1s;
+  font-size: 30px;
+
+  span {
+    margin: auto;
+    transition: 1s;
+  }
+
+  &:hover {
+    span {
+      transform: translateY(-75%);
+      text-shadow: 3px 3px 3px black;
+    }
+  }
+}
+
+.order-online {
+  background: url('https://images.pexels.com/photos/13985154/pexels-photo-13985154.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1');
+  background-repeat: no-repeat;
+  background-size: cover;
+  filter: grayscale(100%);
+}
+
+.book-a-table {
+  background: url('https://images.pexels.com/photos/332090/pexels-photo-332090.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1');
+  background-repeat: no-repeat;
+  background-size: cover;
+  filter: grayscale(100%);
+}
+
+.opening-hours {
+  margin-top: 10px;
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  width: 100%;
+  height: 100px;
+  background-color: $color-wisteria;
+
+  span {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+}
+
+.carousel img {
+  display: block;
+  height: 200px;
+  padding: 5px 5px 0 5px;
+  border-radius: 5px;
+}
+
+.home-images-container {
+  margin-top: 30px;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-around;
+}
+
+.home-image {
+  display: flex;
+  background-repeat: no-repeat;
+  background-size: cover;
+  flex: 30%;
+  height: 130px;
+  margin: 5px;
+  align-items: center;
+  justify-content: center;
+
+  i {
+    font-size: 0;
+    transition: 0.5s;
+    &:first-of-type {
+      color: red;
+    }
+    &:last-of-type {
+      color: blue;
+    }
+  }
+
+  &:hover {
+    i {
+      font-size: 20px;
+    }
+  }
+
+  &:nth-of-type(1) {
+    background: url('https://images.pexels.com/photos/3756329/pexels-photo-3756329.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1');
+  }
+  &:nth-of-type(2) {
+    background: url('https://images.pexels.com/photos/1083515/pexels-photo-1083515.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1');
+  }
+  &:nth-of-type(3) {
+    background: url('https://images.pexels.com/photos/5049/forest-trees-fog-foggy.jpg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1');
+  }
+  &:nth-of-type(4) {
+    background: url('https://images.pexels.com/photos/33109/fall-autumn-red-season.jpg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1');
+  }
+  &:nth-of-type(5) {
+    background: url('https://images.pexels.com/photos/36762/scarlet-honeyeater-bird-red-feathers.jpg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1');
+  }
+  &:nth-of-type(6) {
+    background: url('https://images.pexels.com/photos/757292/pexels-photo-757292.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1');
+  }
+}

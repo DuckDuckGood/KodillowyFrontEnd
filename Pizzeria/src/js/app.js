@@ -2,6 +2,7 @@ import { Booking } from './classes/booking.js';
 import { Cart } from './classes/cart.js';
 import { Product } from './classes/product.js';
 import { classNames, connectionSettings, fetchFromUrl, select } from './helpers.js';
+import { HomePage } from './home-page.js';
 
 const fetchUrl = `${connectionSettings.db.url}/${connectionSettings.db.products}`;
 
@@ -17,6 +18,12 @@ export const app = {
     const thisApp = this;
     const bookingElement = document.querySelector(select.containerOf.booking);
     thisApp.booking = new Booking(bookingElement);
+  },
+  initHomePage: function() {
+    const thisApp = this;
+    const homePageElement = document.querySelector(select.containerOf.home);
+    thisApp.homePage = new HomePage(homePageElement);
+    homePageElement.addEventListener('activatePage', e => thisApp.activatePage(e.detail.pageId));
   },
   activatePage: function(argumentId) {
     let pageId = argumentId;
@@ -65,5 +72,6 @@ export const app = {
     thisApp.initMenu();
     thisApp.initCart();
     thisApp.initBooking();
+    thisApp.initHomePage();
   },
 };
