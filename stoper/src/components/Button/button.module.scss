@@ -1,0 +1,19 @@
+@import '../../styles/colors.scss';
+
+.button {
+  width: 25%;
+  height: 40%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: $emerald;
+  color: $coastal-breeze;
+  border-radius: 10px;
+  cursor: pointer;
+  font-size: 30px;
+  transition: 0.3s;
+
+  &:hover {
+    box-shadow: 5px 5px 5px black;
+  }
+}

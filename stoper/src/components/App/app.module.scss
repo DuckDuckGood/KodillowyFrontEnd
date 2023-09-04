@@ -1,0 +1,11 @@
+@import '../../styles/colors.scss';
+
+.app {
+  width: 50%;
+  height: 50%;
+  display: flex;
+  flex-direction: column;
+  background-color: $deep-koamaru;
+  color: $coastal-breeze;
+  border-radius: 12px;
+}
