@@ -2,7 +2,7 @@ import styles from './Product.module.scss';
 import ShoppingCartButton from '../ShoppingCartButton/ShoppingCartButton';
 import SizeButtons from '../SizeButtons/SizeButtons';
 import ColorButtons from '../ColorButtons/ColorButtons';
-import { useState } from 'react';
+import { useMemo, useState } from 'react';
 import ProductImage from '../ProductImage/ProductImage';
 
 const Product = props => {
@@ -25,12 +25,12 @@ const Product = props => {
     return availableColors;
   };
 
-  const getSize = () => {
+  const getSize = useMemo(() => {
     if (selectedSize) {
       return selectedSize;
     }
     return props.sizes[0].name;
-  };
+  }, [selectedSize, props]);
 
   const processOrder = e => {
     e.preventDefault();
@@ -46,10 +46,10 @@ const Product = props => {
     console.log(order);
   }
 
-  const getPrice = () => {
-    const sizeAdditionalPrice = Object.values(props.sizes).filter(size => size.name === getSize())[0].additionalPrice;
+  const getPrice = useMemo(() => {
+    const sizeAdditionalPrice = Object.values(props.sizes).filter(size => size.name === getSize)[0].additionalPrice;
     return parseInt(props.basePrice) + parseInt(sizeAdditionalPrice);
-  };
+  }, [getSize, props]);
 
   return (
     <article className={styles.product}>
@@ -63,7 +63,7 @@ const Product = props => {
       <div>
         <header>
           <h2 className={styles.name}>{props.title}</h2>
-          <span className={styles.price}>Price: {getPrice()}$</span>
+          <span className={styles.price}>Price: {getPrice}$</span>
         </header>
         <form>
           <div className={styles.sizes}>

@@ -5,7 +5,7 @@ import shortid from "shortid";
 const SizeButtons = props => {
 
   const isActiveSize = size => {
-    return size.name === props.activeSize();
+    return size.name === props.activeSize;
   };
 
   return (
