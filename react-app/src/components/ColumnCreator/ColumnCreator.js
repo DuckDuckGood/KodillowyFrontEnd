@@ -1,26 +1,21 @@
-import { useState } from "react";
 import TextInput from "../TextInput/TextInput";
 import Button from "../Button/button";
-import shortid from "shortid";
 import styles from './column-creator.module.scss';
+import { useDispatch } from "react-redux";
 
 const ColumnCreator = parameters => {
-  const [value, setValue] = useState();
-  const [icon, setIcon] = useState();
+  const dispatch = useDispatch();
 
   const submitHandler = e => {
     e.preventDefault();
 
-    setIcon(e.target[0].value);
+    const icon = e.target[0].value;
     e.target[0].value = '';
 
-    setValue(e.target[1].value);
+    const title = e.target[1].value;
     e.target[1].value = '';
-  }
 
-  if (value && value !== '') {
-    parameters.columnsCallback([...parameters.columns, {key: shortid(), icon: icon, title: value}]);
-    setValue('');
+    dispatch({type: 'ADD_COLUMN', newColumn: {icon: icon, title: title}});
   }
 
   return (
