@@ -5,7 +5,6 @@ import shortid from "shortid";
 import styles from './column-creator.module.scss';
 
 const ColumnCreator = parameters => {
-  console.log(parameters.columnsCallback);
   const [value, setValue] = useState();
   const [icon, setIcon] = useState();
 
