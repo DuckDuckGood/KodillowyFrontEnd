@@ -3,6 +3,7 @@ import TextInput from "../TextInput/TextInput";
 import Button from "../Button/button";
 import styles from './card-creator.module.scss';
 import { useDispatch } from "react-redux";
+import { addCard } from "../../redux/storeUtils";
 
 const CardCreator = props => {
   const [title, setTitle] = useState();
@@ -17,7 +18,7 @@ const CardCreator = props => {
 
   const useHandleSubmit = e => {
     e.preventDefault();
-    dispatch({type: 'ADD_CARD', newCard: newCard()});
+    dispatch(addCard(newCard()));
     setTitle('');
   }
 

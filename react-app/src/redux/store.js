@@ -1,6 +1,8 @@
 import { createStore } from 'redux';
 import initialState from './initialState';
+
 const reducer = (state, payload) => {
+  console.log(payload);
   switch (payload.type) {
     case 'ADD_COLUMN':
       const newColumn = {
@@ -16,6 +18,9 @@ const reducer = (state, payload) => {
       }
       return {...state, cards: [...state.cards, newCard]}
 
+    case 'SET_SEARCH_STRING':
+      return {...state, searchString: payload.searchString}
+      
     default:
       return state;
   }

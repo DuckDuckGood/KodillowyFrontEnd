@@ -2,6 +2,7 @@ import TextInput from "../TextInput/TextInput";
 import Button from "../Button/button";
 import styles from './column-creator.module.scss';
 import { useDispatch } from "react-redux";
+import { addColumn } from "../../redux/storeUtils";
 
 const ColumnCreator = parameters => {
   const dispatch = useDispatch();
@@ -15,7 +16,7 @@ const ColumnCreator = parameters => {
     const title = e.target[1].value;
     e.target[1].value = '';
 
-    dispatch({type: 'ADD_COLUMN', newColumn: {icon: icon, title: title}});
+    dispatch(addColumn({icon: icon, title: title}));
   }
 
   return (

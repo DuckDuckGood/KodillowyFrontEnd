@@ -2,9 +2,10 @@ import { useSelector } from 'react-redux';
 import Column from '../Column/column';
 import ColumnCreator from '../ColumnCreator/ColumnCreator';
 import styles from './list.module.scss';
+import { getAllColumns } from '../../redux/storeUtils';
 
 const List = () => {
-  const columns = useSelector(state => state.columns);
+  const columns = useSelector(state => getAllColumns(state));
   return (
     <div>
       <header className={styles.header}>
