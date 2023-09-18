@@ -11,6 +11,7 @@ const App = () => (
     <NavBar />
     <Routes>
       <Route path='home' element={<Home />} />
+      <Route path='' element={<Home />} />
       <Route path='about' element={<About />} />
       <Route path='favorite' element={<Favorite />} />
       <Route path='*' element={<PageNotFound />} />
