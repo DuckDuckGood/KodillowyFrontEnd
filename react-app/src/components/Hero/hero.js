@@ -1,9 +1,9 @@
 import styles from './hero.module.scss';
 
-const Hero = () => (
+const Hero = props => (
   <div className={styles.hero}>
-    <h1 className={styles.title}>My first React App</h1>
-    <p className={styles.subtitle}>A simple to-do app, with lists, columns and card</p>
+    <h1 className={styles.title}>{props.title}</h1>
+    <p className={styles.subtitle}>{props.subtitle}</p>
   </div>
 );
 

@@ -1,0 +1,41 @@
+@import '../../styles/settings.scss';
+
+.navBar {
+  display: flex;
+  margin: 0;
+  height: 50px;
+  align-items: center;
+  justify-content: right;
+  font-size: 15px;
+  flex-wrap: nowrap;
+
+  .left, .right {
+    display: flex;
+    width: 50%;
+    height: 100%;
+
+    & > div {
+      display: flex;
+      width: 15%;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      transition: 1s;
+      border-radius: 5px;
+      margin-left: 5px;
+
+      &:hover {
+        background-color: $color-success;
+        text-shadow: 1px 1px 1px black;
+      }
+    }
+  }
+
+  .left {
+    justify-content: left;
+  }
+
+  .right {
+    justify-content: right;
+  }
+}
