@@ -1,5 +1,5 @@
 import styles from './nav-bar.module.scss';
-import { changeLocationHash } from '../Utils/utils';
+import { NavLink } from 'react-router-dom';
 
 const NavBar = () => (
   <div className={styles.navBar}>
@@ -7,9 +7,23 @@ const NavBar = () => (
       <div className='fa fa-tasks'></div>
     </div>
     <div className={styles.right}>
-      <div onClick={e => changeLocationHash(e)}>Home</div>
-      <div onClick={e => changeLocationHash(e)}>Favorite</div>
-      <div onClick={e => changeLocationHash(e)}>About</div>
+      <ul>
+        <li>
+          <NavLink className={(nav) => nav.isActive ? styles.linkActive : styles.noActive} to='/'>
+            Home
+          </NavLink>
+        </li>
+        <li>
+          <NavLink className={(nav) => nav.isActive ? styles.linkActive : undefined} to = '/favorite'>
+            Favorite
+          </NavLink>
+        </li>
+        <li>
+          <NavLink className={(nav) => nav.isActive ? styles.linkActive : undefined} to='/about'>
+            About
+          </NavLink>
+        </li>
+      </ul>
     </div>
   </div>
 );

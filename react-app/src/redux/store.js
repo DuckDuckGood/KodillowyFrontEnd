@@ -21,6 +21,13 @@ const reducer = (state, payload) => {
     case 'SET_SEARCH_STRING':
       return {...state, searchString: payload.searchString}
       
+    case 'ADD_LIST':
+      const newList = {
+        id: state.lists.length + 1,
+        ...payload.newList,
+      }
+      return {...state, lists: [...state.lists, newList]}
+
     default:
       return state;
   }

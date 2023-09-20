@@ -4,7 +4,7 @@ import styles from './column-creator.module.scss';
 import { useDispatch } from "react-redux";
 import { addColumn } from "../../redux/storeUtils";
 
-const ColumnCreator = parameters => {
+const ColumnCreator = props => {
   const dispatch = useDispatch();
 
   const submitHandler = e => {
@@ -16,7 +16,7 @@ const ColumnCreator = parameters => {
     const title = e.target[1].value;
     e.target[1].value = '';
 
-    dispatch(addColumn({icon: icon, title: title}));
+    dispatch(addColumn({icon: icon, title: title, listId: props.listId}));
   }
 
   return (

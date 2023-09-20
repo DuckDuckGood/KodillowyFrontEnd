@@ -1,0 +1,14 @@
+.form {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.container {
+  display: flex;
+  min-width: 60%;
+  max-width: 80%;
+  height: 100%;
+  align-items: center;
+  justify-content: space-around;
+}

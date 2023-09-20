@@ -14,7 +14,7 @@
     width: 50%;
     height: 100%;
 
-    & > div {
+    div, li {
       display: flex;
       width: 15%;
       align-items: center;
@@ -37,5 +37,30 @@
 
   .right {
     justify-content: right;
+
+    ul {
+      display: flex;
+      justify-content: right;
+      width: 100%;
+      height: 100%;
+      list-style-type: none;
+
+      li {
+        a {
+          display: flex;
+          width: 100%;
+          height: 100%;
+          align-items: center;
+          justify-content: center;
+          text-decoration: none;
+          color: inherit;
+        }
+      }
+    }
   }
+}
+
+.linkActive {
+  border: 1px $color-success solid;
+  border-radius: 5px;
 }
