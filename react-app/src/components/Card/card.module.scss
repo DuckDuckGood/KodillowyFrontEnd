@@ -10,4 +10,22 @@
     display: flex;
     justify-content: space-between;
     font-weight: bold;
+
+    .icon {
+        display: flex;
+        height: 100%;
+        width: 10%;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        transition: 0.5s;
+
+        &:hover {
+            color: $color-favorite;
+        }
+    }
+
+    .favorite {
+        color: $color-favorite;
+    }
 }

@@ -27,12 +27,12 @@ const initialState = {
   ],
 
   cards: [
-    { id: 1, columnId: 1, title: 'This is Going to Hurt' },
-    { id: 2, columnId: 1, title: 'Interpreter of Maladies' },
-    { id: 3, columnId: 2, title: 'Harry Potter' },
-    { id: 4, columnId: 2, title: 'Star Wars' },
-    { id: 5, columnId: 3, title: 'The Witcher' },
-    { id: 6, columnId: 3, title: 'Skyrim' }
+    { id: 1, columnId: 1, title: 'This is Going to Hurt', favorite: false },
+    { id: 2, columnId: 1, title: 'Interpreter of Maladies', favorite: false },
+    { id: 3, columnId: 2, title: 'Harry Potter', favorite: false },
+    { id: 4, columnId: 2, title: 'Star Wars', favorite: false },
+    { id: 5, columnId: 3, title: 'The Witcher', favorite: false },
+    { id: 6, columnId: 3, title: 'Skyrim', favorite: false }
   ],
 
   lists: [

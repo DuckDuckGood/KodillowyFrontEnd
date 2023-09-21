@@ -28,6 +28,13 @@ const reducer = (state, payload) => {
       }
       return {...state, lists: [...state.lists, newList]}
 
+      case 'TOGGLE_FAVORITE_CARD':
+        const cards = state.cards;
+        cards
+          .filter(card => parseInt(card.id) === parseInt(payload.cardId))
+          .map(card => card.favorite = !card.favorite);
+        return {...state, cards: cards}
+
     default:
       return state;
   }

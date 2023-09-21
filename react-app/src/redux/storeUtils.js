@@ -25,3 +25,7 @@ export const addSearchString = payload => ({type: 'SET_SEARCH_STRING', searchStr
 export const getListById = ({lists}, listId) => lists.find(list => parseInt(list.id) === parseInt(listId));
 
 export const getNewListId = ({lists}) => parseInt(lists.length) + 1;
+
+export const toggleFavoriteCard = card => ({type: 'TOGGLE_FAVORITE_CARD', cardId: card.id});
+
+export const getFavoriteCards = ({cards}) => cards.filter(card => card.favorite);
