@@ -29,3 +29,5 @@ export const getNewListId = ({lists}) => parseInt(lists.length) + 1;
 export const toggleFavoriteCard = card => ({type: 'TOGGLE_FAVORITE_CARD', cardId: card.id});
 
 export const getFavoriteCards = ({cards}) => cards.filter(card => card.favorite);
+
+export const removeCard = payload => ({type: 'REMOVE_CARD', cardId: payload.id});

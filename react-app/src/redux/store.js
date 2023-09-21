@@ -1,44 +1,19 @@
-import { createStore } from 'redux';
+import { combineReducers, createStore } from 'redux';
 import initialState from './initialState';
 
-const reducer = (state, payload) => {
-  console.log(payload);
-  switch (payload.type) {
-    case 'ADD_COLUMN':
-      const newColumn = {
-        id: state.columns.length + 1,
-        ...payload.newColumn,
-      }
-      return {...state, columns: [...state.columns, newColumn]}
+import { listsReducer } from './reducers/listsReducer';
+import { columnsReducer } from './reducers/columnsReducer';
+import { cardsReducer } from './reducers/cardsReducer';
+import { searchStringReducer } from './reducers/searchStringReducer';
 
-    case 'ADD_CARD':
-      const newCard = {
-        id: state.cards.length + 1,
-        ...payload.newCard,
-      }
-      return {...state, cards: [...state.cards, newCard]}
-
-    case 'SET_SEARCH_STRING':
-      return {...state, searchString: payload.searchString}
-      
-    case 'ADD_LIST':
-      const newList = {
-        id: state.lists.length + 1,
-        ...payload.newList,
-      }
-      return {...state, lists: [...state.lists, newList]}
-
-      case 'TOGGLE_FAVORITE_CARD':
-        const cards = state.cards;
-        cards
-          .filter(card => parseInt(card.id) === parseInt(payload.cardId))
-          .map(card => card.favorite = !card.favorite);
-        return {...state, cards: cards}
-
-    default:
-      return state;
-  }
+const subreducers = {
+  lists: listsReducer,
+  columns: columnsReducer,
+  cards: cardsReducer,
+  searchString: searchStringReducer,
 };
+
+const reducer = combineReducers(subreducers);
 
 const store = createStore(
   reducer,
