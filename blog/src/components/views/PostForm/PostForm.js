@@ -1,19 +1,47 @@
 import { dispatchCreatePost, dispatchUpdatePost } from '../../../utils/dispatchUtils';
-import TextArea from '../../features/TextArea/TextArea';
 import TextInput from '../../features/TextInput/TextInput';
 import './PostForm.css';
+import 'react-quill/dist/quill.snow.css'
+import "react-datepicker/dist/react-datepicker.css";
 import { useEffect, useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
+import ReactQuill from 'react-quill';
+import DatePicker from 'react-datepicker';
 
 export const PostForm = props => {
   const navigate = useNavigate();
+  const [datePickerValue, setDatePickerValue] = useState();
   const post = props.edit ? props.post : {};
+
+  const setStartDate = (property) => {
+    const startingDate = new Date();
+
+    if (!props.edit || !property) {
+      setDatePickerValue(startingDate);
+    } else {
+
+      const dateFragments = property.split('.');
+
+      if (dateFragments.length !== 3
+            || !isFinite(dateFragments[0])
+            || !isFinite(dateFragments[1])
+            || !isFinite(dateFragments[2])) {
+        setDatePickerValue(startingDate);
+      } else {
+        startingDate.setDate(dateFragments[0]);
+        startingDate.setMonth(parseInt(dateFragments[1]) + 1);
+        startingDate.setFullYear(dateFragments[2]);
+        setDatePickerValue(startingDate);
+      }
+    }
+  }
 
   useEffect(() => {
     if (!post) {
       return navigate('/');
     }
+    setStartDate(post.published);
   }, []); // eslint-disable-line
 
   const getStartingValue = (property) => {
@@ -65,6 +93,13 @@ export const PostForm = props => {
     }
   }
 
+  const changeDate = changedDate => {
+    const date = new Date(changedDate);
+    setDatePickerValue(date);
+    const parsedDate = `${date.getDate()}.${date.getMonth()+1}.${date.getFullYear()}`;
+    setPublished(parsedDate);
+  }
+
   return (
     <div className='d-flex justify-content-center'>
       <div className='w-80 d-flex justify-content-start pt-5 flex-wrap'>
@@ -79,11 +114,11 @@ export const PostForm = props => {
         </div>
         <div className='w-100 mt-3 d-flex flex-column'>
           <div>Published</div>
-          <TextInput name='published date' onChange={setPublished} defaultValue={getStartingValue(post.published)} />
+          <DatePicker dateFormat='dd-MM-yyyy' onSelect={changeDate} selected={datePickerValue}/>
         </div>
-        <div className='w-100 mt-3 d-flex flex-column'>
+        <div className='w-100 mt-3 d-flex flex-column pb-5'>
           <div>Content</div>
-          <TextArea name='content' onChange={setContent} defaultValue={getStartingValue(post.content)} />
+          <ReactQuill theme='snow' onChange={setContent} defaultValue={getStartingValue(post.content)} />
         </div>
         <div className='w-100 mt-3 d-flex flex-column'>
           <div>Short shortDescription</div>
@@ -93,7 +128,7 @@ export const PostForm = props => {
         <div
           onClick={submitForm}
           className='d-flex justify-content-center align-items-center p-3 border border-primary text-primary h4 mt-5 rounded-2 cursor-pointer'>
-          Create post
+          {props.edit ? 'Update post' : 'Create post'}
         </div>
       </div>
     </div>

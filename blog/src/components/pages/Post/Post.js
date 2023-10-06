@@ -20,7 +20,7 @@ const Post = () => {
           <span className='fs-1'>{poste.title}</span>
           <span>{poste.author}</span>
           <span>{poste.published}</span>
-          <span className='fs-4'>{poste.content}</span>
+          <span className='fs-4' dangerouslySetInnerHTML={{__html: poste.content}}></span>
         </div>
         <div className='d-flex justify-content-end'>
           <Nav className='d-flex flex-nowrap'>
