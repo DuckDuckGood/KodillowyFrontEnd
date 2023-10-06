@@ -30,7 +30,7 @@ export const PostForm = props => {
         setDatePickerValue(startingDate);
       } else {
         startingDate.setDate(dateFragments[0]);
-        startingDate.setMonth(parseInt(dateFragments[1]) + 1);
+        startingDate.setMonth(parseInt(dateFragments[1]) - 1);
         startingDate.setFullYear(dateFragments[2]);
         setDatePickerValue(startingDate);
       }
@@ -103,7 +103,7 @@ export const PostForm = props => {
   return (
     <div className='d-flex justify-content-center'>
       <div className='w-80 d-flex justify-content-start pt-5 flex-wrap'>
-        <div className='w-100 h1'>Post Creator</div>
+        <div className='w-100 h1'>{props.edit ? 'Post Editor' : 'Post Creator'}</div>
         <div className='w-100 mt-3 d-flex flex-column'>
           <div>Title</div>
           <TextInput name='title' onChange={setTitle} defaultValue={getStartingValue(post.title)} />
@@ -121,7 +121,7 @@ export const PostForm = props => {
           <ReactQuill theme='snow' onChange={setContent} defaultValue={getStartingValue(post.content)} />
         </div>
         <div className='w-100 mt-3 d-flex flex-column'>
-          <div>Short shortDescription</div>
+          <div>shortDescription</div>
           <TextInput name='short description' onChange={setShortDescription} defaultValue={getStartingValue(post.shortDescription)} />
         </div>
         
