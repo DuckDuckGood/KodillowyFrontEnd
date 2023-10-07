@@ -1,7 +1,7 @@
 import { Nav } from 'react-bootstrap';
 import { NavLink } from 'react-router-dom';
 import './PostView.css';
-import { AUTHOR, PUBLISHED, READ_MORE } from '../../../utils/fields';
+import { AUTHOR, CATEGORY, PUBLISHED, READ_MORE } from '../../../utils/fields';
 
 const PostView = props => {
   const post = props.post;
@@ -11,6 +11,7 @@ const PostView = props => {
       <span className='fs-3 mb-3'>{post.title}</span>
       <span><b>{AUTHOR}: </b>{post.author}</span>
       <span><b>{PUBLISHED}: </b>{post.published}</span>
+      <span><b>{CATEGORY}: </b>{post.category}</span>
       <span>{post.shortDescription}</span>
       <Nav className='mt-3'>
         <Nav.Link as={NavLink} className='text-light d-flex p3 bg-primary rounded-1' to={`/post/${post.id}`}>{READ_MORE}</Nav.Link>

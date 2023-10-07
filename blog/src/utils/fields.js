@@ -37,6 +37,7 @@ export const AUTHOR_NAME = 'Author name';
 export const PUBLISHED = 'Published';
 
 export const CONTENT = 'Content';
+export const CATEGORY = 'Category';
 
 export const SHORT_DESCRIPTION = 'Short description';
 

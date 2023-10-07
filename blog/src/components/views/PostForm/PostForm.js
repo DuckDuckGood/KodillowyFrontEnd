@@ -8,9 +8,10 @@ import { useDispatch } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import { setStartDate, changeDate, correctDate } from './postFormUtils';
 import { useForm } from 'react-hook-form';
-import { AUTHOR, AUTHOR_NAME, CONTENT, POST_CREATOR, POST_EDITOR, PUBLISHED, SHORT_DESCRIPTION, TITLE } from '../../../utils/fields';
+import { AUTHOR, AUTHOR_NAME, CATEGORY, CONTENT, POST_CREATOR, POST_EDITOR, PUBLISHED, SHORT_DESCRIPTION, TITLE } from '../../../utils/fields';
 import DatePickerForm from '../../features/DatePickerForm/DatePickerForm';
 import ReactQuillForm from '../../features/ReqctQuillForm/ReactQuillForm';
+import CategorySelector from '../../features/CategorySelector/CategorySelector';
 
 const PostForm = props => {
   const { register, handleSubmit: validate, formState: { errors } } = useForm();
@@ -22,12 +23,15 @@ const PostForm = props => {
 
   const dispatch = useDispatch();
   const navigate = useNavigate();
+
   const [datePickerValue, setDatePickerValue] = useState();
   const [title, setTitle] = useState(getStartingValue(post.title));
   const [author, setAuthor] = useState(getStartingValue(post.author));
   const [published, setPublished] = useState(getStartingValue(post.published));
   const [content, setContent] = useState(getStartingValue(post.content));
   const [shortDescription, setShortDescription] = useState(getStartingValue(post.shortDescription));
+  const [category, setCategory] = useState(getStartingValue(post.category));
+
   const [dateError, setDateError] = useState(false);
   const [contentError, setContetError] = useState(false);
 
@@ -46,6 +50,7 @@ const PostForm = props => {
       published: published,
       content: content,
       shortDescription: shortDescription,
+      category: category,
     };
 
     dispatch(dispatchCreatePost(newPost));
@@ -60,6 +65,7 @@ const PostForm = props => {
       published: published,
       content: content,
       shortDescription: shortDescription,
+      category: category,
     };
 
     dispatch(dispatchUpdatePost(editedPost));
@@ -132,6 +138,13 @@ const PostForm = props => {
             onChange={handleChangeContent}
             defaultValue={getStartingValue(post.content)}
             error={contentError}
+          />
+        </div>
+        <div className='w-100 mt-3 d-flex flex-column'>
+          <div>{CATEGORY}</div>
+          <CategorySelector
+            selected={category}
+            onChange={setCategory}
           />
         </div>
         <div className='w-100 mt-3 d-flex flex-column'>

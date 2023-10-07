@@ -4,7 +4,7 @@ import { getPostById } from "../../../utils/storeUtils";
 import { Nav } from "react-bootstrap";
 import { NavLink } from "react-router-dom";
 import DeleteModal from "../../views/DeleteModal/DeleteModal";
-import { EDIT } from "../../../utils/fields";
+import { AUTHOR, CATEGORY, EDIT, PUBLISHED } from "../../../utils/fields";
 
 const Post = () => {
   const id = useParams().id;
@@ -19,8 +19,9 @@ const Post = () => {
       <div className='d-flex w-50'>
         <div className='d-flex w-80 flex-column'>
           <span className='fs-1'>{poste.title}</span>
-          <span>{poste.author}</span>
-          <span>{poste.published}</span>
+          <span><b>{AUTHOR}</b>: {poste.author}</span>
+          <span><b>{PUBLISHED}</b>: {poste.published}</span>
+          <span className='pb-2'><b>{CATEGORY}</b>: {poste.category}</span>
           <span className='fs-4' dangerouslySetInnerHTML={{__html: poste.content}}></span>
         </div>
         <div className='d-flex justify-content-end'>
