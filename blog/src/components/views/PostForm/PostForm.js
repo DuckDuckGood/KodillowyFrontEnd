@@ -6,55 +6,38 @@ import "react-datepicker/dist/react-datepicker.css";
 import { useEffect, useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
-import ReactQuill from 'react-quill';
-import DatePicker from 'react-datepicker';
+import { setStartDate, changeDate, correctDate } from './postFormUtils';
+import { useForm } from 'react-hook-form';
+import { AUTHOR, AUTHOR_NAME, CONTENT, POST_CREATOR, POST_EDITOR, PUBLISHED, SHORT_DESCRIPTION, TITLE } from '../../../utils/fields';
+import DatePickerForm from '../../features/DatePickerForm/DatePickerForm';
+import ReactQuillForm from '../../features/ReqctQuillForm/ReactQuillForm';
 
-export const PostForm = props => {
-  const navigate = useNavigate();
-  const [datePickerValue, setDatePickerValue] = useState();
-  const post = props.edit ? props.post : {};
-
-  const setStartDate = (property) => {
-    const startingDate = new Date();
-
-    if (!props.edit || !property) {
-      setDatePickerValue(startingDate);
-    } else {
-
-      const dateFragments = property.split('.');
-
-      if (dateFragments.length !== 3
-            || !isFinite(dateFragments[0])
-            || !isFinite(dateFragments[1])
-            || !isFinite(dateFragments[2])) {
-        setDatePickerValue(startingDate);
-      } else {
-        startingDate.setDate(dateFragments[0]);
-        startingDate.setMonth(parseInt(dateFragments[1]) - 1);
-        startingDate.setFullYear(dateFragments[2]);
-        setDatePickerValue(startingDate);
-      }
-    }
-  }
-
-  useEffect(() => {
-    if (!post) {
-      return navigate('/');
-    }
-    setStartDate(post.published);
-  }, []); // eslint-disable-line
+const PostForm = props => {
+  const { register, handleSubmit: validate, formState: { errors } } = useForm();
 
   const getStartingValue = (property) => {
     return props.edit ? property : '';
   }
+  const post = props.edit ? props.post : {};
 
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+  const [datePickerValue, setDatePickerValue] = useState();
   const [title, setTitle] = useState(getStartingValue(post.title));
   const [author, setAuthor] = useState(getStartingValue(post.author));
   const [published, setPublished] = useState(getStartingValue(post.published));
   const [content, setContent] = useState(getStartingValue(post.content));
   const [shortDescription, setShortDescription] = useState(getStartingValue(post.shortDescription));
+  const [dateError, setDateError] = useState(false);
+  const [contentError, setContetError] = useState(false);
 
-  const dispatch = useDispatch();
+
+  useEffect(() => {
+    if (!post) {
+      return navigate('/');
+    }
+    setStartDate(props.edit, setDatePickerValue, post.published);
+  }, []); // eslint-disable-line
 
   const createPost = () => {
     const newPost = {
@@ -84,6 +67,10 @@ export const PostForm = props => {
   }
 
   const submitForm = () => {
+    if (dateError || contentError) {
+      return;
+    }
+
     if (props.create) {
       createPost();
     }
@@ -93,40 +80,74 @@ export const PostForm = props => {
     }
   }
 
-  const changeDate = changedDate => {
-    const date = new Date(changedDate);
-    setDatePickerValue(date);
-    const parsedDate = `${date.getDate()}.${date.getMonth()+1}.${date.getFullYear()}`;
-    setPublished(parsedDate);
+  const handleChangeDate = changedDate => {
+    setDateError(!correctDate(changedDate));
+
+    changeDate(changedDate, setDatePickerValue, setPublished);
+  }
+
+  const handleChangeContent = changedContent => {
+    setContetError(!(changedContent && changedContent.length > 19));
+
+    setContent(changedContent);
   }
 
   return (
     <div className='d-flex justify-content-center'>
       <div className='w-80 d-flex justify-content-start pt-5 flex-wrap'>
-        <div className='w-100 h1'>{props.edit ? 'Post Editor' : 'Post Creator'}</div>
+        <div className='w-100 h1'>{props.edit ? POST_EDITOR : POST_CREATOR}</div>
         <div className='w-100 mt-3 d-flex flex-column'>
-          <div>Title</div>
-          <TextInput name='title' onChange={setTitle} defaultValue={getStartingValue(post.title)} />
+          <div>{TITLE}</div>
+          <TextInput
+            name={TITLE}
+            onChange={setTitle}
+            defaultValue={getStartingValue(post.title)}
+            formHook={{...register(TITLE, { required: true })}}
+            error={errors[TITLE]}
+            errorMessage='This field is required!'
+          />
         </div>
         <div className='w-100 mt-3 d-flex flex-column'>
-          <div>Author</div>
-          <TextInput name='author name' onChange={setAuthor} defaultValue={getStartingValue(post.author)} />
+          <div>{AUTHOR}</div>
+          <TextInput
+            name={AUTHOR_NAME}
+            onChange={setAuthor}
+            defaultValue={getStartingValue(post.author)}
+            formHook={{...register(AUTHOR_NAME, { required: true, minLength: 3 })}}
+            error={errors[AUTHOR_NAME]}
+            errorMessage='This field is required and should have min. 3 chars'
+          />
         </div>
         <div className='w-100 mt-3 d-flex flex-column'>
-          <div>Published</div>
-          <DatePicker dateFormat='dd-MM-yyyy' onSelect={changeDate} selected={datePickerValue}/>
-        </div>
-        <div className='w-100 mt-3 d-flex flex-column pb-5'>
-          <div>Content</div>
-          <ReactQuill theme='snow' onChange={setContent} defaultValue={getStartingValue(post.content)} />
+          <div>{PUBLISHED}</div>
+          <DatePickerForm
+            onSelect={handleChangeDate}
+            selected={datePickerValue}
+            error={dateError}
+          />
         </div>
         <div className='w-100 mt-3 d-flex flex-column'>
-          <div>shortDescription</div>
-          <TextInput name='short description' onChange={setShortDescription} defaultValue={getStartingValue(post.shortDescription)} />
+          <div>{CONTENT}</div>
+          <ReactQuillForm
+            onChange={handleChangeContent}
+            defaultValue={getStartingValue(post.content)}
+            error={contentError}
+          />
+        </div>
+        <div className='w-100 mt-3 d-flex flex-column'>
+          <div>{SHORT_DESCRIPTION}</div>
+          <TextInput
+            name={SHORT_DESCRIPTION}
+            onChange={setShortDescription}
+            defaultValue={getStartingValue(post.shortDescription)}
+            formHook={{...register(SHORT_DESCRIPTION, { required: true, minLength: 20 })}}
+            error={errors[SHORT_DESCRIPTION]}
+            errorMessage='This field is required and should have min. 20 chars'
+          />
         </div>
         
         <div
-          onClick={submitForm}
+          onClick={validate(submitForm)}
           className='d-flex justify-content-center align-items-center p-3 border border-primary text-primary h4 mt-5 rounded-2 cursor-pointer'>
           {props.edit ? 'Update post' : 'Create post'}
         </div>

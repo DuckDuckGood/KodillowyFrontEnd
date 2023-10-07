@@ -4,6 +4,7 @@ import { getPostById } from "../../../utils/storeUtils";
 import { Nav } from "react-bootstrap";
 import { NavLink } from "react-router-dom";
 import DeleteModal from "../../views/DeleteModal/DeleteModal";
+import { EDIT } from "../../../utils/fields";
 
 const Post = () => {
   const id = useParams().id;
@@ -24,7 +25,7 @@ const Post = () => {
         </div>
         <div className='d-flex justify-content-end'>
           <Nav className='d-flex flex-nowrap'>
-            <Nav.Link as={NavLink} className='text-primary d-flex py-3 px-4 rounded-1 h-25 align-items-center border border-primary mx-2' to={`/edit/${poste.id}`}>Edit</Nav.Link>
+            <Nav.Link as={NavLink} className='text-primary d-flex py-3 px-4 rounded-1 h-25 align-items-center border border-primary mx-2' to={`/edit/${poste.id}`}>{EDIT}</Nav.Link>
           </Nav>
           <DeleteModal post={poste} />
         </div>

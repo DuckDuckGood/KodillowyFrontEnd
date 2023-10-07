@@ -1,18 +1,18 @@
-import { CREATE_POST, DELETE_POST, UPDATE_POST } from "../../utils/fields";
+import { CREATE_POST_EVENT, DELETE_POST_EVENT, UPDATE_POST_EVENT } from "../../utils/fields";
 
 // const createActionName = actionName => `app/posts/${actionName}`;
 
 const postReducer = (statePart = [], action) => {
   switch (action.type) {
-    case DELETE_POST:
+    case DELETE_POST_EVENT:
       return statePart.filter(post => parseInt(post.id) !== parseInt(action.postId));
 
-    case CREATE_POST:
+    case CREATE_POST_EVENT:
       const createdPost = action.post;
       createdPost.id = statePart.length + 1;
       return [...statePart, createdPost];
 
-    case UPDATE_POST:
+    case UPDATE_POST_EVENT:
       const updatedPost = action.post;
       const result = statePart.map(post => {
         if (parseInt(post.id) === parseInt(updatedPost.id)) {
