@@ -1,6 +1,6 @@
 export const convertPLNToUSD = (PLN) => {
 
-  if (parseInt(PLN) !== 0 && (!PLN || !isFinite(PLN) || parseInt(PLN) < 0)) {
+  if (parseInt(PLN) !== 0 && (!isFinite(PLN) || parseInt(PLN) < 0)) {
     return NaN;
   }
 
