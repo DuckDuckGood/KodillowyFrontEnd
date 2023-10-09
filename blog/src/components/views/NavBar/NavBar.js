@@ -1,6 +1,6 @@
 import { Nav } from 'react-bootstrap';
 import { NavLink } from 'react-router-dom';
-import { ABOUT, BLOG_APP, HOME } from '../../../utils/fields';
+import { ABOUT, BLOG_APP, CATEGORIES, HOME } from '../../../utils/fields';
 
 const NavBar = () => (
   <div className='d-flex bg-primary justify-content-between p-2 text-light rounded-1'>
@@ -11,6 +11,7 @@ const NavBar = () => (
       <Nav className='me-auto'>
         <Nav.Link as={NavLink} className='text-light' to='/home'>{HOME}</Nav.Link>
         <Nav.Link as={NavLink} className='text-light' to='/about'>{ABOUT}</Nav.Link>
+        <Nav.Link as={NavLink} className='text-light' to='/categories'>{CATEGORIES}</Nav.Link>
       </Nav>
     </div>
   </div>

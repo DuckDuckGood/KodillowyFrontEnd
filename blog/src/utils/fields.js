@@ -4,6 +4,8 @@ export const CREATE_POST_EVENT = 'CREATE_POST';
 
 export const UPDATE_POST_EVENT = 'UPDATE_POST';
 
+export const SELECT_CATEGORY = 'SELECT_CATEGORY';
+
 export const CREATE_POST = 'Create post';
 
 export const UPDATE_POST = 'Update post';
@@ -27,6 +29,8 @@ export const BLOG_APP = ' BlogApp 2023';
 export const HOME = 'Home';
 
 export const ABOUT = 'About';
+
+export const CATEGORIES = 'Categories';
 
 export const TITLE = 'Title';
 

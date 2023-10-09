@@ -1,7 +1,5 @@
 import { CREATE_POST_EVENT, DELETE_POST_EVENT, UPDATE_POST_EVENT } from "../../utils/fields";
 
-// const createActionName = actionName => `app/posts/${actionName}`;
-
 const postReducer = (statePart = [], action) => {
   switch (action.type) {
     case DELETE_POST_EVENT:

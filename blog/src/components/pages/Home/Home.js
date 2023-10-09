@@ -1,5 +1,5 @@
 import { useSelector } from 'react-redux';
-import { getAllPosts } from '../../../utils/storeUtils';
+import { getAllPosts, getSelectedCategory } from '../../../utils/storeUtils';
 import PostView from '../../views/PostView/PostView';
 import './Home.css';
 import { useNavigate } from 'react-router-dom';
@@ -7,11 +7,16 @@ import shortid from 'shortid';
 import { ALL_POSTS, CREATE_POST } from '../../../utils/fields';
 
 const Home = () => {
-  const posts = useSelector(state => getAllPosts(state));
+  let posts = useSelector(state => getAllPosts(state));
+  const selectedCategory = useSelector(state => getSelectedCategory(state));
   const navigator = useNavigate();
 
   const addPost = () => {
     navigator('/post/add');
+  }
+
+  if (posts.some(post => post.category === selectedCategory)) {
+    posts = posts.filter(post => post.category === selectedCategory);
   }
 
   return (
