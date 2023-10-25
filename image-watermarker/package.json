@@ -1,0 +1,12 @@
+{
+  "name": "image-watermarker",
+  "version": "1.0.0",
+  "exports": "./index.js",
+  "license": "MIT",
+  "dependencies": {
+    "inquirer": "^9.2.11",
+    "jimp": "^0.22.10"
+  },
+  "type": "module",
+  "node": ">=16"
+}
