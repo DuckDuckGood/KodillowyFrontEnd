@@ -1,0 +1,6 @@
+{
+  "name": "@karoldziedziel/id-generator",
+  "version": "1.0.2",
+  "main": "index.js",
+  "license": "MIT"
+}

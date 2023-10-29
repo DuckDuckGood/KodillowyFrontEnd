@@ -1,0 +1,1 @@
+A simple module allows to generate id based on random characters :)
