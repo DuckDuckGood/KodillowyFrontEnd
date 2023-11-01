@@ -1,5 +1,6 @@
 export const fetchTables = () => {
   return fetch('http://localhost:3131/api/tables')
+  .then(s => console.log(s))
   .then(res => res.json());
 }
 
