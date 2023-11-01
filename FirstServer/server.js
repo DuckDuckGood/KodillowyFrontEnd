@@ -8,10 +8,12 @@ app.engine('.hbs', engine({
   extname: 'hbs',
   defaultLayout: 'main',
   layoutsDir: './public/views/layouts',
-  //partialsDir: './public/views'
 }));
 app.set('view engine', '.hbs');
 app.set('views', path.join(__dirname, 'public', 'views'));
+
+app.use(express.urlencoded({extended: false}));
+app.use(express.json());
 app.use(express.static(path.join(__dirname, '/public')));
 
 setEndpoints(app);
