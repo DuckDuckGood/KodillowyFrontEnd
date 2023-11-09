@@ -1,5 +1,6 @@
 const express = require('express');
-const db = require('./db');
+const db = require('../db/db').seats;
+const isAlreadyBooked = require('./utils');
 const router = express.Router();
 
 // GET
@@ -18,6 +19,10 @@ router.post('', (req, res) => {
     id: db.length + 1,
   };
 
+  if (isAlreadyBooked(newElement)) {
+    res.json({ message: 'Something went wrong!' });
+  }
+  
   db.push(newElement);
   res.json({ message: 'Ok' });
 });

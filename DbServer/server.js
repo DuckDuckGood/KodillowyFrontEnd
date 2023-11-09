@@ -2,21 +2,29 @@ const express = require('express');
 const testimonialsRoutes = require('./testimonials/routes');
 const concerts = require('./concerts/routes');
 const seats = require('./seats/routes');
+const cors = require('cors');
+const path = require('path');
 
 const app = express();
+
+app.use(cors({
+  origin: 'http://localhost:3000',
+  methods: 'GET,POST,DELETE,PUT'
+}));
 
 app.use(express.urlencoded({extended: false}));
 app.use(express.json());
 
-app.use('/testimonials', testimonialsRoutes);
-app.use('/concerts', concerts);
-app.use('/seats', seats);
+app.use('/api/testimonials', testimonialsRoutes);
+app.use('/api/concerts', concerts);
+app.use('/api/seats', seats);
 
 // DEFAULT ENDPOINT
 app.all('*', (req, res) => {
-  res.status(404).json({message: 'Error 404. There is no website with this address :)'});
+  res.sendFile(path.join(__dirname, '/client/build/index.html'));
 });
+app.use(express.static(path.join(__dirname, '/client/build')));
 
-app.listen(8000, () => {
+app.listen(process.env.PORT || 8000, () => {
   console.log('DbServer started!');
 });

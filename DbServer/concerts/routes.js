@@ -1,14 +1,14 @@
 const express = require('express');
-const db = require('./db');
+const db = require('../db/db').concerts;
 const router = express.Router();
 
 // GET
 router.get('', (req, res) => {
-  res.json(db);
+  res.status(200).json(db);
 });
 
 router.get('/:id', (req, res) => {
-  res.json(db.find(o => parseInt(o.id) === parseInt(req.params.id)));
+  res.status(200).json(db.find(o => parseInt(o.id) === parseInt(req.params.id)));
 });
 
 // POST
@@ -19,7 +19,7 @@ router.post('', (req, res) => {
   };
 
   db.push(newElement);
-  res.json({ message: 'Ok' });
+  res.status(200).json({ message: 'Ok' });
 });
 
 // DELETE
@@ -28,13 +28,13 @@ router.delete('/:id', (req, res) => {
   if (isFinite(id) && parseInt(id) > 0 && db.length >= parseInt(id)) {
     try {
       db.splice(parseInt(id)-1, 1);
-      res.json({message: `Successfully deleted db record with id "${id}"`});
+      res.status(200).json({message: `Successfully deleted db record with id "${id}"`});
     } catch(error) {
       console.log(error);
-      res.json({message: `Error while deleting db record with id "${id}"`});
+      res.status(405).json({message: `Error while deleting db record with id "${id}"`});
     }
   } else {
-    res.json({message: `Could not delete db record with id "${id}"`});
+    res.status(405).json({message: `Could not delete db record with id "${id}"`});
   }
 });
 
