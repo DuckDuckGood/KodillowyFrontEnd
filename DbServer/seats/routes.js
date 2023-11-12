@@ -5,7 +5,7 @@ const router = express.Router();
 
 // GET
 router.get('', (req, res) => {
-  res.json(db);
+  res.status(200).json(db);
 });
 
 router.get('/:id', (req, res) => {
