@@ -9,8 +9,11 @@ const app = express();
 
 app.use(cors({
   origin: 'http://localhost:3000',
-  methods: 'GET,POST,DELETE,PUT'
+  methods: 'GET,POST,DELETE,PUT',
+  optionsSuccessStatus: 200,
 }));
+
+app.options('*', cors());
 
 app.use(express.urlencoded({extended: false}));
 app.use(express.json());
