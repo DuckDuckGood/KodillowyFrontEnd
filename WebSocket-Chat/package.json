@@ -1,0 +1,18 @@
+{
+  "name": "WebSocket-Chat",
+  "version": "1.0.0",
+  "main": "index.js",
+  "author": "Karol Dziędziel",
+  "license": "MIT",
+  "dependencies": {
+    "create-react-app": "^5.0.1",
+    "express": "^4.18.2",
+    "npm-run-all": "^4.1.5",
+    "react": "^18.2.0"
+  },
+  "scripts": {
+    "start": "npm-run-all -p start:*",
+    "start:build-client": "cd client && yarn build",
+    "start:server": "nodemon server.js"
+  }
+}
