@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { API_URL } from '../config';
+import { getApiUrl } from '../config';
 
 /* SELECTORS */
 export const getConcerts = ({ concerts }) => concerts.data;
@@ -34,7 +34,7 @@ export const loadConcertsRequest = () => {
     dispatch(startRequest());
     try {
 
-      let res = await axios.get(`${API_URL}/concerts`);
+      let res = await axios.get(`${getApiUrl()}/concerts`);
       dispatch(loadConcerts(res.data));
       dispatch(endRequest());
 

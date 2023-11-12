@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { API_URL } from '../config';
+import { getApiUrl } from '../config';
 
 /* SELECTORS */
 export const getSeats = ({ seats }) => seats.data;
@@ -33,7 +33,7 @@ export const loadSeatsRequest = () => {
     dispatch(startRequest({ name: 'LOAD_SEATS' }));
     try {
 
-      let res = await axios.get(`${API_URL}/seats`);
+      let res = await axios.get(`${getApiUrl()}/seats`);
       dispatch(loadSeats(res.data));
       dispatch(endRequest({ name: 'LOAD_SEATS' }));
 
@@ -50,7 +50,7 @@ export const addSeatRequest = (seat) => {
     dispatch(startRequest({ name: 'ADD_SEAT' }));
     try {
 
-      let res = await axios.post(`${API_URL}/seats`, seat);
+      let res = await axios.post(`${getApiUrl()}/seats`, seat);
       dispatch(addSeat(res));
       dispatch(endRequest({ name: 'ADD_SEAT' }));
 
