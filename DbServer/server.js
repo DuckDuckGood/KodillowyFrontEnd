@@ -30,5 +30,5 @@ app.all('*', (req, res) => {
 });
 
 app.listen(process.env.PORT || 8000, () => {
-  console.log('DbServer started!');
+  console.log('DbServer started!', process.env.PORT || 8000);
 });
