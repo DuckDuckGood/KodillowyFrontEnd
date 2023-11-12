@@ -9,4 +9,6 @@ export const fields = {
   addMessageForm: document.querySelector('#add-messages-form'),
   userNameInput: document.querySelector('#username'),
   messageContentInput: document.querySelector('#message-content'),
+  reservedLogin: document.querySelector('#reservedLogin'),
+  newUser: document.querySelector('#newUser'),
 };

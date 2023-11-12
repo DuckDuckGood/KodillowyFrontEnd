@@ -15,11 +15,15 @@
       <h1>Chat.app</h1>
     </header>
 
+    <!-- NEW USER -->
+    <div id="newUser" class="new-user"></div>
+
     <!-- WELCOME FORM -->
     <form id="welcome-form" class="welcome-form show">
       <h2>Log in</h2>
       <input class="text-input" type="text" id="username" placeholder="Type your name here" autocomplete="off">
       <button class="btn" type="submit">Join</button>
+      <div id="reservedLogin" class='reserved-login'>Login already exists</div>
     </form>
 
     <!-- MESSAGES SECTION -->
@@ -39,5 +43,6 @@
 
   </main>
   <script src="app.js" type="module"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.7.2/socket.io.js"></script>
 </body>
 </html>

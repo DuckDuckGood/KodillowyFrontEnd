@@ -12,13 +12,13 @@ export const createSelfMessage = messageContent => {
   return message;
 }
 
-export const createMessage = messageContent => {
+export const createMessage = received => {
   const message = document.createElement('li');
   message.classList.add('message');
   message.innerHTML = `
-  <h3 class="message__author">You</h3>
+  <h3 class="message__author">${received.user}</h3>
   <div class="message__content">
-    ${messageContent}
+    ${received.message}
   </div>
 `;
 

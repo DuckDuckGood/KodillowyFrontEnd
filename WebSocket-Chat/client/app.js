@@ -1,26 +1,23 @@
 import { globals, fields } from './globals.js';
-import { createSelfMessage } from './utils.js';
+import { createMessage, createSelfMessage } from './utils.js';
+import { send, join, validateLogin, showNewUser } from './domUtils.js';
+let reservedLogins = [];
+
+const receiveMessage = message => {
+  fields.messagesList.append(createMessage(message));
+}
 
 const addMessage = message => {
+  socket.emit('message', { user: globals.userName, message: message });
   fields.messagesList.append(createSelfMessage(message));
 }
 
-const join = e => {
-  e.preventDefault();
+const socket = io();
+socket.on('message', receiveMessage);
+socket.on('reservedLogins', received => reservedLogins = received);
+socket.on('newUser', newUser => showNewUser(newUser));
 
-  if (fields.userNameInput.value) {
-    globals.userName = fields.userNameInput.value;
-    fields.loginForm.classList.remove('show');
-    fields.messagesSection.classList.add('show');
-  }
-}
-fields.loginForm.querySelector('.btn').addEventListener('click', e => join(e));
+fields.userNameInput.addEventListener('input', () => validateLogin(reservedLogins));
 
-const send = e => {
-  e.preventDefault();
-  if (fields.messageContentInput.value) {
-    addMessage(fields.messageContentInput.value);
-    fields.messageContentInput.value = '';
-  }
-}
-fields.addMessageForm.querySelector('.btn').addEventListener('click', e => send(e));
+fields.loginForm.querySelector('.btn').addEventListener('click', e => join(e, socket));
+fields.addMessageForm.querySelector('.btn').addEventListener('click', e => send(e, addMessage));

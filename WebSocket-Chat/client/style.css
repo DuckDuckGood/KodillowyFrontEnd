@@ -104,6 +104,17 @@ p {
   background: #3498db;
 }
 
+.reserved-login {
+  display: none;
+  color: red;
+}
+
+.new-user {
+  display: none;
+  font-size: 25px;
+  transition: 0.5s;
+}
+
 .show {
   display: block;
 }
