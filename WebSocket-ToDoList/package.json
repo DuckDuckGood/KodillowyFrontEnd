@@ -1,0 +1,11 @@
+{
+  "name": "WebSocket-ToDoList",
+  "version": "1.0.0",
+  "main": "index.js",
+  "author": "Karol Dziędziel",
+  "license": "MIT",
+  "dependencies": {
+    "express": "^4.18.2",
+    "socket.io": "^4.7.2"
+  }
+}

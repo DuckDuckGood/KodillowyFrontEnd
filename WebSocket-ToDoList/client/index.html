@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="pl-PL">
+  <head>
+    <title>ToDoList</title>
+    <meta charset="utf-8">
+    <link rel="stylesheet" href="style.css">
+  </head>
+  <body>
+    <div class="container">
+      <div class="list">
+        <div class="title">
+          To Do List
+        </div>
+        <div class="content" id="content">
+        </div>
+        <div class="newElementForm">
+          <div class="input-container">
+            <input type="text" id="newElementInput">
+          </div>
+          <div class="add-button" id="newElementButton">
+            Add
+          </div>
+        </div>
+      </div>
+    </div>
+    <script src="app.js" type="module"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.7.2/socket.io.js"></script>
+  </body>
+</html>
