@@ -1,6 +1,7 @@
 import { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Button, Progress, Alert } from 'reactstrap';
+import io from 'socket.io-client';
 import { getSeats, loadSeatsRequest, getRequests } from '../../../redux/seatsRedux';
 import './SeatChooser.scss';
 
@@ -11,8 +12,16 @@ const SeatChooser = ({ chosenDay, chosenSeat, updateSeat, updateSeatsToggler }) 
   
   console.log(updateSeatsToggler);
   useEffect(() => {
-    dispatch(loadSeatsRequest());
-  }, [dispatch, chosenSeat, updateSeatsToggler]);
+    const socket = io(process.env.NODE_ENV === 'production' ? '' : 'ws://localhost:8080', { transports: ['websocket'] });
+    socket.on('seats', seats => {
+      console.log('hola hola', seats);
+      dispatch(loadSeatsRequest(seats));
+    });
+
+    return () => {
+      socket.close(); 
+    }
+  }, []);
 
   const isTaken = (seatId) => {
     return (seats.some(item => (item.seat === seatId && item.day === chosenDay)));

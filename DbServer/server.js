@@ -29,6 +29,19 @@ app.all('*', (req, res) => {
   res.sendFile(path.join(__dirname, '/client/build/index.html'));
 });
 
-app.listen(process.env.PORT || 8000, () => {
+const server = app.listen(process.env.PORT || 8000, () => {
   console.log('DbServer started!', process.env.PORT || 8000);
+});
+
+const socketConf = require('socket.io');
+const socketIO = socketConf(server);
+
+socketIO.on('connection', socket => {
+  console.log('siema');
+
+  socket.emit('seats', seats);
+
+  socket.on('disconnect', () => {
+    console.log('bye bye');
+  })
 });

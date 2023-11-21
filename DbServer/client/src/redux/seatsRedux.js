@@ -27,14 +27,12 @@ export const addSeat = payload => ({ payload, type: ADD_SEAT });
 
 /* THUNKS */
 
-export const loadSeatsRequest = () => {
+export const loadSeatsRequest = seats => {
   return async dispatch => {
 
     dispatch(startRequest({ name: 'LOAD_SEATS' }));
     try {
-
-      let res = await axios.get(`${getApiUrl()}/seats`);
-      dispatch(loadSeats(res.data));
+      dispatch(loadSeats(seats));
       dispatch(endRequest({ name: 'LOAD_SEATS' }));
 
     } catch(e) {
