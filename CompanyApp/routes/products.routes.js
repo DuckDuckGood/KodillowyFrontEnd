@@ -4,36 +4,38 @@ const express = require('express');
 const router = express.Router();
 const db = require('./../db');
 const { ObjectId } = require('mongodb');
+const productModel = require('../models/product.model');
 
 router.get('/products', (req, res) => {
-  req.db.products
+  productModel
     .find()
-    .toArray()
     .then(products => res.json(products))
     .catch(error => res.status(500).json({ message: error }));
 });
 
 router.get('/products/random', (req, res) => {
-  req.db.products
-    .aggregate([{ $sample: { size: 1 } }])
-    .toArray()
-    .then(product => res.json(product))
-    .catch(error => res.status(500).json({ message: error }));
+  productModel.countDocuments()
+    .then(count => {
+      const randomValue = parseInt((Math.random() * 100) % count );
+      productModel.findOne().skip(randomValue)
+        .then(product => res.json(product))
+        .catch(error => res.status(500).json({ message: error }));
+    });
 });
 
 router.get('/products/:id', (req, res) => {
   const id = req.params.id;
-  req.db.products
-    .find({ _id: new ObjectId(id) })
-    .toArray()
+  
+  productModel.findById(id)
     .then(products => res.json(products))
     .catch(error => res.status(500).json({ message: error }));
 });
 
 router.post('/products', (req, res) => {
   const { name, client } = req.body;
-  req.db.products
-    .insertOne({ name, client })
+
+  const model = new productModel({ name, client });
+  model.save()
     .then(() => res.json({ message: 'OK' }))
     .catch(error => res.status(500).json({ message: error }));
 });
@@ -42,19 +44,33 @@ router.put('/products/:id', (req, res) => {
   const id = req.params.id;
   const { name, client } = req.body;
 
-  req.db.departments
-    .updateOne({ _id: new ObjectId(id) }, { $set: { name, client } })
-    .then(() => res.json({ message: 'OK' }))
-    .catch(error => res.status(500).json({ message: error }));
+  productModel.findById(id)
+    .then(model => {
+      if (model) {
+        productModel
+          .updateOne({ _id: new ObjectId(id) }, { $set: { name, client } })
+          .then(() => res.json(model))
+          .catch(error => res.status(500).json({ message: error }));
+      } else {
+        res.status(404).json({ message: `Could not find product with id ${id}` });
+      }
+    });
 });
 
 router.delete('/products/:id', (req, res) => {
   const id = req.params.id;
 
-  req.db.departments
-    .deleteOne({ _id: new ObjectId(id) })
-    .then(() => res.json({ message: 'OK' }))
-    .catch(error => res.status(500).json({ message: error }));
+  productModel.findById(id)
+    .then(model => {
+      if (model) {
+        productModel.deleteOne(model)
+          .then(() => res.json(model))
+          .catch(error => res.status(500).json({ message: error }));
+      } else {
+        res.status(404).json({ message: `Could not find product with id ${id}` });
+      } 
+    })
+  
 });
 
 module.exports = router;

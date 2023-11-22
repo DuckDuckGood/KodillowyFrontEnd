@@ -1,16 +1,12 @@
 const runApp = require('./serverUtils');
 
-const mongoClient = require('mongodb').MongoClient;
+const mongoose = require('mongoose');
 
 
 const dbConnection = () => {
 
-  mongoClient.connect('mongodb://127.0.0.1:27017')
-    .then(client => {
-      console.log('successfully connected!');
-      return client.db('companyDb');
-    })
-    .then(db => runApp(db))
+  mongoose.connect('mongodb://127.0.0.1:27017/companyDb')
+    .then(db => runApp(db.connection))
     .catch(err => {
       console.log('Error!', err);
     });

@@ -1,36 +1,39 @@
 const express = require('express');
 const router = express.Router();
-const db = require('./../db');
 const { ObjectId } = require('mongodb');
+const departmentModel = require('../models/department.model');
 
 router.get('/departments', (req, res) => {
-  req.db.departments
-    .find()
-    .toArray()
+  departmentModel.find()
     .then(departments => res.json(departments))
     .catch(error => res.status(500).json({ message: error }));
 });
 
 router.get('/departments/random', (req, res) => {
-  req.db.departments
-    .aggregate([{ $sample: { size: 1 } }])
-    .toArray()
-    .then(department => res.json(department))
-    .catch(error => res.status(500).json({ message: error }));
+  departmentModel.countDocuments()
+    .then(count => {
+      const randomValue = parseInt((Math.random() * 100) % count);
+
+      console.log(count, randomValue);
+      departmentModel.findOne()
+        .skip(randomValue)
+        .then(department => res.json(department))
+        .catch(error => res.status(500).json({ message: error }));
+    });
+  
 });
 
 router.get('/departments/:id', (req, res) => {
   const id = req.params.id;
-  req.db.departments
-    .findOne({ _id: new ObjectId(id) })
+  departmentModel.findById(id)
     .then(department => res.json(department))
     .catch(error => res.status(500).json({ message: error }));
 });
 
 router.post('/departments', (req, res) => {
   const { name } = req.body;
-  req.db.departments
-    .insertOne({ name })
+  const model = new departmentModel({ name: name });
+  model.save()
     .then(() => res.json({ message: 'OK' }))
     .catch(error => res.status(500).json({ message: error }));
 });
@@ -38,17 +41,33 @@ router.post('/departments', (req, res) => {
 router.put('/departments/:id', (req, res) => {
   const id = req.params.id;
   const { name } = req.body;
-  req.db.departments
-    .updateOne({ _id: new ObjectId(id) }, { $set: { name } })
-    .then(() => res.json({ message: 'OK' }))
-    .catch(error => res.status(500).json({ message: error }));
+
+  departmentModel.findById(id)
+    .then(model => {
+      if (model) {
+        departmentModel
+          .updateOne({ _id: new ObjectId(id) }, { $set: { name } })
+          .then(() => res.json(model))
+          .catch(error => res.status(500).json({ message: error }));
+      } else {
+        res.status(404).json({ message: `Could not find department with id ${id}` });
+      }
+    });
 });
 
 router.delete('/departments/:id', (req, res) => {
-  req.db.departments
-    .deleteOne({ _id: new ObjectId(id) })
-    .then(() => res.json({ message: 'OK' }))
-    .catch(error => res.status(500).json(error));
+  const id = req.params.id;
+
+  departmentModel.findOne({ _id: id })
+    .then(model => {
+      if (model) {
+        departmentModel.deleteOne(model)
+          .then(() => res.json(model))
+          .catch(error => res.status(500).json(error));
+      } else {
+        res.status(404).json({ message: `Could not find department with id ${id}` })
+      }
+    });
 });
 
 module.exports = router;

@@ -2,6 +2,11 @@ const express = require('express');
 const cors = require('cors');
 
 const runApp = db => {
+  db.once('open', () => {
+    console.log('Connected to the database');
+  });
+  db.on('error', err => console.log('Error ' + err));
+
   const app = express();
 
   const employeesRoutes = require('./routes/employees.routes');
@@ -11,15 +16,6 @@ const runApp = db => {
   app.use(cors());
   app.use(express.json());
   app.use(express.urlencoded({ extended: false }));
-  
-  app.use((req, res, next) => {
-    req.db = {
-      employees: db.collection('employees'),
-      departments: db.collection('departments'),
-      products: db.collection('products'),
-    };
-    next();
-  });
 
   app.use('/api', employeesRoutes);
   app.use('/api', departmentsRoutes);
