@@ -1,64 +1,32 @@
 const express = require('express');
 const db = require('../db/db').seats;
-const isAlreadyBooked = require('./utils');
+const { ObjectId } = require('mongodb');
+const { saveSeat, findSeats, findSeat, updateSeat, deleteSeat } = require('../controllers/seat.controller');
 const router = express.Router();
 
 // GET
-router.get('', (req, res) => {
-  res.status(200).json(db);
+router.get('', async (req, res) => {
+  (await findSeats()).send(res);
 });
 
-router.get('/:id', (req, res) => {
-  res.json(db.find(o => parseInt(o.id) === parseInt(req.params.id)));
+router.get('/:id', async (req, res) => {
+  const id = req.params.id;
+  (await findSeat({ _id: new ObjectId(id) })).send(res);
 });
 
 // POST
 router.post('', (req, res) => {
-  const newElement = {
-    ...req.body,
-    id: db.length + 1,
-  };
-
-  if (isAlreadyBooked(newElement)) {
-    res.json({ message: 'Something went wrong!' });
-  }
-  
-  db.push(newElement);
-  res.json({ message: 'Ok' });
+  saveSeat(req, res);
 });
 
 // DELETE
 router.delete('/:id', (req, res) => {
-  const id = req.params.id;
-  if (isFinite(id) && parseInt(id) > 0 && db.length >= parseInt(id)) {
-    try {
-      db.splice(parseInt(id)-1, 1);
-      res.json({message: `Successfully deleted db record with id "${id}"`});
-    } catch(error) {
-      console.log(error);
-      res.json({message: `Error while deleting db record with id "${id}"`});
-    }
-  } else {
-    res.json({message: `Could not delete db record with id "${id}"`});
-  }
+  deleteSeat(req, res);
 });
 
 // PUT
 router.put('/:id', (req, res) => {
-  const id = parseInt(req.params.id)-1;
-  const receivedElement = req.body;
-
-  if (id > 0 && id <= db.length) {
-    const updatedElement = {};
-    Object.entries(db[id]).forEach(entry => {
-      const [key, value] = entry;
-      updatedElement[key] = key !== 'id' && receivedElement[key] ? receivedElement[key] : value;
-    });
-    db[id] = updatedElement;
-    res.json({message: `Ok`});
-  } else {
-    res.json({message: `Could not update db record with id "${id}"`});
-  }
+  updateSeat(req, res);
 });
 
 module.exports = router;

@@ -1,44 +1,26 @@
 const express = require('express');
+const { findTestimonials, findTestimonialById, saveTestimonial, deleteTestimonial } = require('../controllers/testimonial.controller');
 const db = require('../db/db').testimonials;
 const router = express.Router();
 
 // GET
-router.get('', (req, res) => {
-  res.json(db);
+router.get('', async (req, res) => {
+  (await findTestimonials()).send(res);
 });
 
-router.get('/random', (req, res) => {
-  const randomId = parseInt(Math.random() * 100) % db.length + 1;
-
-  res.json(db.find(o => parseInt(o.id) === parseInt(randomId)));
-});
-
-router.get('/:id', (req, res) => {
-  res.json(db.find(o => parseInt(o.id) === parseInt(req.params.id)));
+router.get('/:id', async (req, res) => {
+  const id = req.params.id;
+  (await findTestimonialById(id)).send(res);
 });
 
 // POST
-router.post((req, res) => {
-  console.log(req.body);
-  const newElement = {...req.body, id: db.length + 1};
-  db.push(newElement);
-  res.json({message: 'Ok'});
+router.post('', (req, res) => {
+  saveTestimonial(req, res);
 });
 
 // DELETE
 router.delete('/:id', (req, res) => {
-  const id = req.params.id;
-  if (isFinite(id) && parseInt(id) > 0 && db.length >= parseInt(id)) {
-    try {
-      db.splice(parseInt(id)-1, 1);
-      res.json({message: `Successfully deleted db record with id "${id}"`});
-    } catch(error) {
-      console.log(error);
-      res.json({message: `Error while deleting db record with id "${id}"`});
-    }
-  } else {
-    res.json({message: `Could not delete db record with id "${id}"`});
-  }
+  deleteTestimonial(req, res);
 });
 
 module.exports = router;

@@ -10,7 +10,6 @@ const SeatChooser = ({ chosenDay, chosenSeat, updateSeat, updateSeatsToggler }) 
   const seats = useSelector(getSeats);
   const requests = useSelector(getRequests);
   
-  console.log(updateSeatsToggler);
   useEffect(() => {
     const socket = io(process.env.NODE_ENV === 'production' ? '' : 'ws://localhost:8080', { transports: ['websocket'] });
     socket.on('seats', seats => {
