@@ -4,8 +4,15 @@ const path = require('path');
 const cors = require('cors');
 
 const app = express();
+const appPort = process.env.PORT || 3131;
 
 app.use(express.static(path.join(__dirname, '/build')));
+
+app.use(cors({
+  origin: `http://localhost:${appPort}`,
+  methods: 'GET,POST,DELETE,PUT',
+  optionsSuccessStatus: 200,
+}));
 
 app.options('*', cors());
 
@@ -21,6 +28,6 @@ app.all('*', (req, res) => {
   res.sendFile(path.join(__dirname, '/build/index.html'));
 })
 
-app.listen(process.env.PORT || 3131, () => {
-  console.log('Siemanko');
+app.listen(appPort, () => {
+  console.log(`Server running on port ${appPort}`);
 });
