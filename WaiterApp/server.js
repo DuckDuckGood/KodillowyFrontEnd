@@ -7,12 +7,6 @@ const app = express();
 
 app.use(express.static(path.join(__dirname, '/build')));
 
-app.use(cors({
-  origin: 'http://localhost:3131',
-  methods: 'GET,POST,DELETE,PUT',
-  optionsSuccessStatus: 200,
-}));
-
 app.options('*', cors());
 
 app.use(express.urlencoded({extended: false}));
