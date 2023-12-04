@@ -10,7 +10,6 @@ const StatusSelector = props => {
     props.onChange(e.target.value);
     
     if (e.target.value === BUSY) {
-      console.log('heh');
       props.whenBusy();
     }
   }

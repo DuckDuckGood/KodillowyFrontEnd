@@ -15,11 +15,9 @@ const App = () => {
   const dispatch = useDispatch();
 
   fetchTables()
-    .then(res => console.log('tables', res))
     .then(res => dispatch(dispatchFetchedTables(res)));
 
   fetchStatuses()
-    .then(res => console.log('statuses', res))
     .then(res => dispatch(dispatchFetchedStatuses(res)))
     .then(() => setSpinner(false));
 
