@@ -1,13 +1,15 @@
 const seatModel = require("../models/seat.model");
 const MongoModel = require("./mongo.model");
 const { ObjectId } = require('mongodb');
+const {sanitizeRequest} = require("../serverUtils");
 
 const findSeat = async param => {
   return new MongoModel(await seatModel.findOne(param || {}));
 }
 
 const findSeatById = async id => {
-  return (await findSeat({ _id: new ObjectId(id) }));
+  const sanitizedId = sanitizeRequest({ id }).id;
+  return (await findSeat({ _id: new ObjectId(sanitizedId) }));
 }
 
 const findSeats = async () => {
@@ -15,7 +17,7 @@ const findSeats = async () => {
 }
 
 const saveSeat = async (req, res) => {
-  const { day, seat, client, email } = req.body;
+  const { day, seat, client, email } = sanitizeRequest(req.body);
 
   const alreadyExisting = await seatModel.find({ day, seat, client, email });
   if (!alreadyExisting || alreadyExisting.length === 0) {
@@ -33,8 +35,8 @@ const saveSeat = async (req, res) => {
 }
 
 const updateSeat = async (req, res) => {
-  const id = req.params.id;
-  const { day, seat, client, email } = req.body;
+  const { id } = sanitizeRequest(req.params);
+  const { day, seat, client, email } = sanitizeRequest(req.body);
   const existingModel = (await findSeatById(id)).get();
   
   if (existingModel) {
@@ -51,7 +53,7 @@ const updateSeat = async (req, res) => {
 }
 
 const deleteSeat = async (req, res) => {
-  const id = req.params.id;
+  const { id } = sanitizeRequest(req.params);
   const existingModel = (await findSeatById(id)).get();
 
   if (existingModel) {

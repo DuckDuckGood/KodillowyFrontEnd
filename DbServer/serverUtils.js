@@ -5,6 +5,8 @@ const seats = require('./seats/routes');
 const cors = require('cors');
 const path = require('path');
 const { findSeats } = require('./controllers/seat.controller');
+const sanitize = require('mongo-sanitize');
+const helmet = require('helmet');
 const app = express();
 
 const runApp = db => {
@@ -12,6 +14,8 @@ const runApp = db => {
     console.log('Connected to the database');
   });
   db.on('error', err => console.log('Error ' + err));
+
+  app.use(helmet());
 
   app.use(cors({
     origin: 'http://localhost:3000',
@@ -53,4 +57,14 @@ const runApp = db => {
   });
 };
 
-module.exports = runApp;
+const sanitizeRequest = toSanitize => {
+  const sanitized = {};
+  Object.entries(toSanitize).forEach(entry => {
+    const [key, value] = entry;
+    body[key] = sanitize(value);
+  });
+
+  return sanitized;
+}
+
+module.exports = { runApp, sanitizeRequest };

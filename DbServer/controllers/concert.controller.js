@@ -1,13 +1,15 @@
 const { ObjectId } = require("mongodb");
 const concertModel = require("../models/concert.model")
 const MongoModel = require("./mongo.model")
+const {sanitizeRequest} = require("../serverUtils");
 
 const findConcert = async param => {
   return new MongoModel(await concertModel.findOne(param || {}));
 }
 
 const findConcertById = async id => {
-  return (await findConcert({ _id: new ObjectId(id) }));
+  const sanitizedId = sanitizeRequest({ id }).id;
+  return (await findConcert({ _id: new ObjectId(sanitizedId) }));
 }
 
 const findConcerts = async () => {
@@ -15,7 +17,7 @@ const findConcerts = async () => {
 }
 
 const saveConcert = (req, res) => {
-  const { performer, genre, price, day, image } = req.body;
+  const { performer, genre, price, day, image } = sanitizeRequest(req.body);
   new concertModel({ performer, genre, price, day, image })
     .save()
     .then(() => {
@@ -25,7 +27,7 @@ const saveConcert = (req, res) => {
 }
 
 const deleteConcert = async (req, res) => {
-  const id = req.params.id;
+  const { id } = sanitizeRequest(req.params);
   const existingModel = (await findConcertById(id)).get();
   if (existingModel) {
     concertModel.deleteOne(existingModel)
@@ -37,8 +39,8 @@ const deleteConcert = async (req, res) => {
 }
 
 const updateConcert = async (req, res) => {
-  const { performer, genre, price, day, image } = req.body;
-  const id = req.params.id;
+  const { performer, genre, price, day, image } = sanitizeRequest(req.body);
+  const { id } = sanitizeRequest(req.params);
   const existingModel = (await findConcertById(id)).get();
 
   if (existingModel) {

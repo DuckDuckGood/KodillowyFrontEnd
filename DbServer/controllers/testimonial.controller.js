@@ -1,13 +1,15 @@
 const { ObjectId } = require('mongodb');
 const testimonialModel = require("../models/testimonial.model");
 const MongoModel = require('./mongo.model');
+const {sanitizeRequest} = require("../serverUtils");
 
 const findTestimonial = async param => {
   return new MongoModel(await testimonialModel.findOne(param || {}));
 }
 
 const findTestimonialById = async id => {
-  return (await findTestimonial({ _id: new ObjectId(id) }));
+  const sanitizedId = sanitizeRequest({ id }).id;
+  return (await findTestimonial({ _id: new ObjectId(sanitizedId) }));
 }
 
 const findTestimonials = async () => {
@@ -15,7 +17,7 @@ const findTestimonials = async () => {
 }
 
 const saveTestimonial = (req, res) => {
-  const { author, text } = req.body;
+  const { author, text } = sanitizeRequest(req.body);
   new testimonialModel({ author, text })
     .save()
     .then(param => res.json({ message: param || 'OK' }))
@@ -23,7 +25,7 @@ const saveTestimonial = (req, res) => {
 }
 
 const deleteTestimonial = async (req, res) => {
-  const id = req.params.id;
+  const { id } = sanitizeRequest(req.params);
   const existingModel = (await findTestimonialById(id)).get();
 
   if (existingModel) {
@@ -36,8 +38,8 @@ const deleteTestimonial = async (req, res) => {
 }
 
 const updateTestimonial = async (req, res) => {
-  const id = req.params.id;
-  const { author, text } = req.body;
+  const { id } = sanitizeRequest(req.params);
+  const { author, text } = sanitizeRequest(req.body);
   const existingModel = (await findTestimonialById(id)).get();
 
   if (existingModel) {
