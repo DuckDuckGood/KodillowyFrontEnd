@@ -5,7 +5,7 @@
   "license": "MIT",
   "dependencies": {
     "inquirer": "^9.2.11",
-    "jimp": "^0.22.10"
+    "jimp": "^1.0.2"
   },
   "type": "module",
   "node": ">=16"
