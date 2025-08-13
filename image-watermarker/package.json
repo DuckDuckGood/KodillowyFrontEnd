@@ -4,7 +4,7 @@
   "exports": "./index.js",
   "license": "MIT",
   "dependencies": {
-    "inquirer": "^9.2.11",
+    "inquirer": "^10.0.0",
     "jimp": "^0.22.10"
   },
   "type": "module",
